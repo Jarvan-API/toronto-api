@@ -1,19 +1,14 @@
 version: "3"
 services:
-  mysql:
-    image: mysql:8.1.0
-    container_name: mysql-dev
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo-toronto-dev
     ports:
-      - "3306:3306"
-    volumes:
-      - ./mysql-data:/var/lib/mysql
-    networks:
-      - my-network
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASS}
 
 networks:
   my-network:

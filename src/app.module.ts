@@ -3,12 +3,13 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 
 import { AppController } from "./infrastructure/controllers";
+import { BcryptModule, MongoDBModule, SentryModule } from "./infrastructure/config";
+import { AuthModule } from "./infrastructure/modules";
+import { SentryMiddleware } from "./infrastructure/middlewares";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true, cache: true, expandVariables: true }),
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -19,10 +20,16 @@ import { AppController } from "./infrastructure/controllers";
         },
       ],
     }),
+    MongoDBModule,
+    SentryModule,
+    AuthModule,
+    BcryptModule,
   ],
   controllers: [AppController],
   providers: [],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {}
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SentryMiddleware).forRoutes("*");
+  }
 }

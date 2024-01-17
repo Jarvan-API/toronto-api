@@ -4,7 +4,8 @@ import { HttpAdapterHost, NestFactory } from "@nestjs/core";
 import { Logger, ValidationPipe, VersioningType } from "@nestjs/common";
 
 import { AppModule } from "./app.module";
-import { AllExceptionsFilter, morganConfig } from "./infrastructure";
+import { AllExceptionsFilter } from "./infrastructure/utils";
+import { morganConfig, swaggerConfig } from "./infrastructure/tools";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,8 @@ async function bootstrap() {
   const NODE_ENV = configService.get("NODE_ENV");
 
   app.use(helmet());
+
+  app.enableCors();
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -35,6 +38,8 @@ async function bootstrap() {
     app.use(morganConfig.successHandler);
     app.use(morganConfig.errorHandler);
   }
+
+  swaggerConfig(app);
 
   await app.listen(NODE_PORT, () => Logger.log(`HTTP Service is listening on port ${NODE_PORT}`, "App"));
 }
