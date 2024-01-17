@@ -1,0 +1,11 @@
+*
+
+!.env*
+!jest*
+!test/
+!src/
+!scripts/
+!package.json
+!package-lock.json
+!tsconfig*
+!.github/
