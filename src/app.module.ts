@@ -3,9 +3,10 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 
 import { AppController } from "./infrastructure/controllers";
-import { BcryptModule, MongoDBModule, SentryModule } from "./infrastructure/config";
+import { BcryptModule, CassandraModule, MongoDBModule, SentryModule } from "./infrastructure/config";
 import { AuthModule, ChatModule, UserModule } from "./infrastructure/modules";
 import { SentryMiddleware } from "./infrastructure/middlewares";
+import { FolderModule } from "./infrastructure/modules/folder.module";
 
 @Module({
   imports: [
@@ -21,7 +22,9 @@ import { SentryMiddleware } from "./infrastructure/middlewares";
       ],
     }),
     MongoDBModule,
+    CassandraModule,
     BcryptModule,
+    FolderModule,
     AuthModule,
     ChatModule,
     UserModule,
