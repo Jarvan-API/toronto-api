@@ -17,3 +17,18 @@ export class UserProfile extends DefaultApiResponse {
   })
   user: IUserProfile;
 }
+
+export interface IPendingUser {
+  _id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  createdAt: Date;
+}
+
+export class PendingUsers extends DefaultApiResponse {
+  @ApiProperty({
+    description: "List of pending users",
+  })
+  users: IPendingUser[];
+}

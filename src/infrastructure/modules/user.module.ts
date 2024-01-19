@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
-import { GetAuthSession, GetUserProfile, Onboarding } from "src/application/use-cases";
+import { ChangePendingUser, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
 import { SessionSchema, UserSchema } from "src/domain/entities";
 
 import { UserControllerV1 } from "../controllers";
@@ -18,6 +18,8 @@ import { SessionRepository, UserRepository } from "../repositories";
   controllers: [UserControllerV1],
   providers: [
     GetUserProfile,
+    ListPendingUsers,
+    ChangePendingUser,
     Onboarding,
     GetAuthSession,
     {

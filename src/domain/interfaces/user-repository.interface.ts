@@ -4,7 +4,7 @@ import { IUser } from "src/domain/entities";
 
 export interface IUserRepository {
   create: (user: IUser) => Promise<IUser>;
-  findAll: () => Promise<IUser[]>;
+  findAll: (filter?: FilterQuery<IUser>) => Promise<IUser[]>;
   findOne: (filters: FilterQuery<IUser>) => Promise<IUser>;
   update: (_id: string, data: UpdateQuery<IUser>) => Promise<any>;
   delete: (_id: string) => Promise<any>;

@@ -16,8 +16,8 @@ export class UserRepository implements IUserRepository {
     return await this.userModel.create(user);
   }
 
-  async findAll(): Promise<IUser[]> {
-    return this.userModel.find();
+  async findAll(filter?: FilterQuery<IUser>): Promise<IUser[]> {
+    return this.userModel.find(filter);
   }
 
   async findOne(filter: FilterQuery<IUser>): Promise<IUser> {
