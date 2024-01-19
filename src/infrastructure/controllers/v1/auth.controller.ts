@@ -6,7 +6,6 @@ import { SignInDTO, SignUpDTO } from "src/application/dtos";
 import { DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
 import { UserCreated, UserLoggedIn } from "src/application/presentations";
 import { UserSignIn, UserSignUp } from "src/application/use-cases";
-import { ISession } from "src/domain/entities";
 import { AuthenticatedGuard, LocalAuthGuard } from "src/infrastructure/config";
 
 @Controller({

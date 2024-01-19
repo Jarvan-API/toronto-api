@@ -42,3 +42,9 @@ export class UserNotAllowed extends GenericHttpException {
     super("User is not allowed to use this resource.", HttpStatus.UNAUTHORIZED, "USER_UNAUTHORIZED");
   }
 }
+
+export class EmailAlreadyUsed extends GenericHttpException {
+  constructor() {
+    super("This email is already used.", HttpStatus.BAD_REQUEST, "EMAIL_DUP");
+  }
+}

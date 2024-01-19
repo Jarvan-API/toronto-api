@@ -6,10 +6,7 @@ import { ISession } from "src/domain/entities";
 
 @Injectable()
 export class AuthenticatedGuard implements CanActivate {
-  constructor(
-    private readonly getSessionUseCase: GetAuthSession,
-  ) {
-  }
+  constructor(private readonly getSessionUseCase: GetAuthSession) {}
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();

@@ -1,14 +1,11 @@
 import { Module } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
-import { PassportModule } from "@nestjs/passport";
 
 import { Entity, PORT } from "src/application/enums";
-import { GetAuthSession, UserSignIn, UserSignUp, VerifySignUp } from "src/application/use-cases";
+import { GetAuthSession, GetUserProfile, Onboarding } from "src/application/use-cases";
 import { SessionSchema, UserSchema } from "src/domain/entities";
 
-import { AuthControllerV1 } from "../controllers";
-import { BcryptService, LocalStrategy, SessionSerializer } from "../config";
+import { UserControllerV1 } from "../controllers";
 import { SessionRepository, UserRepository } from "../repositories";
 
 @Module({
@@ -17,18 +14,12 @@ import { SessionRepository, UserRepository } from "../repositories";
       { name: Entity.User, schema: UserSchema },
       { name: Entity.Session, schema: SessionSchema },
     ]),
-    PassportModule.register({ session: true }),
   ],
-  controllers: [AuthControllerV1],
+  controllers: [UserControllerV1],
   providers: [
-    UserSignUp,
-    UserSignIn,
-    VerifySignUp,
-    BcryptService,
+    GetUserProfile,
+    Onboarding,
     GetAuthSession,
-    SessionSerializer,
-    LocalStrategy,
-    ConfigService,
     {
       provide: PORT.User,
       useClass: UserRepository,
@@ -40,4 +31,4 @@ import { SessionRepository, UserRepository } from "../repositories";
   ],
   exports: [],
 })
-export class AuthModule {}
+export class UserModule {}

@@ -6,8 +6,8 @@ import { IUser } from "src/domain/entities";
 export class SessionSerializer extends PassportSerializer {
   serializeUser(user: IUser, done: (err: Error, user: any) => void): any {
     const store = {
-      ...user, 
-      password: undefined
+      ...user,
+      password: undefined,
     };
     done(null, store);
   }

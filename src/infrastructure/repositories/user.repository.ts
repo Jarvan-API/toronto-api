@@ -1,6 +1,6 @@
 import { InjectModel } from "@nestjs/mongoose";
 import { Injectable, Logger } from "@nestjs/common";
-import { FilterQuery, Model, UpdateQuery } from "mongoose";
+import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
 
 import { IUser, User } from "src/domain/entities";
 import { IUserRepository } from "src/domain/interfaces";
@@ -25,10 +25,10 @@ export class UserRepository implements IUserRepository {
   }
 
   async update(_id: string, data: UpdateQuery<IUser>): Promise<any> {
-    return await this.userModel.findOneAndUpdate({ _id }, data);
+    return await this.userModel.findOneAndUpdate({ _id: new Types.ObjectId(_id) }, data);
   }
 
   async delete(_id: string): Promise<any> {
-    return await this.userModel.deleteOne({ _id });
+    return await this.userModel.deleteOne({ _id: new Types.ObjectId(_id) });
   }
 }

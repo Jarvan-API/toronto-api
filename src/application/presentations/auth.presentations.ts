@@ -28,22 +28,21 @@ export class IUserLogged {
 
   @ApiProperty({
     description: "User's current status",
-    type: String
+    type: String,
   })
-  userStatus: string
+  userStatus: string;
 
   @ApiProperty({
     description: "User ID",
-    type: String
+    type: String,
   })
-  id: string
+  id: string;
 }
-
 
 export class UserLoggedIn extends DefaultApiResponse {
   @ApiProperty({
     description: "User log data",
-    type: IUserLogged
+    type: IUserLogged,
   })
-  data: IUserLogged
+  data: IUserLogged;
 }
