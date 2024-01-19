@@ -4,7 +4,7 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 
 import { AppController } from "./infrastructure/controllers";
 import { BcryptModule, MongoDBModule, SentryModule } from "./infrastructure/config";
-import { AuthModule, UserModule } from "./infrastructure/modules";
+import { AuthModule, ChatModule, UserModule } from "./infrastructure/modules";
 import { SentryMiddleware } from "./infrastructure/middlewares";
 
 @Module({
@@ -23,6 +23,7 @@ import { SentryMiddleware } from "./infrastructure/middlewares";
     MongoDBModule,
     BcryptModule,
     AuthModule,
+    ChatModule,
     UserModule,
     SentryModule,
   ],

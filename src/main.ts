@@ -8,7 +8,7 @@ import { AllExceptionsFilter } from "./infrastructure/utils";
 import { morganConfig, swaggerConfig } from "./infrastructure/tools";
 import session from "express-session";
 import passport from "passport";
-import MongoStore from "connect-mongo"
+import MongoStore from "connect-mongo";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,19 +28,21 @@ async function bootstrap() {
   const store = MongoStore.create({
     ttl: 86400,
     mongoUrl: MONGODB_URI,
-    dbName: MONGODB_NAME
+    dbName: MONGODB_NAME,
   });
 
-  app.use(session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    store
-  }));
+  app.use(
+    session({
+      secret: SESSION_SECRET,
+      resave: false,
+      saveUninitialized: true,
+      store,
+    }),
+  );
 
   app.use(passport.initialize());
   app.use(passport.session());
-  
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
