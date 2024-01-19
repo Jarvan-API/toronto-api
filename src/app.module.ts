@@ -9,7 +9,7 @@ import { SentryMiddleware } from "./infrastructure/middlewares";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, cache: true, expandVariables: true }),
+    ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -21,9 +21,9 @@ import { SentryMiddleware } from "./infrastructure/middlewares";
       ],
     }),
     MongoDBModule,
-    SentryModule,
-    AuthModule,
     BcryptModule,
+    AuthModule,
+    SentryModule,
   ],
   controllers: [AppController],
   providers: [],

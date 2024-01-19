@@ -1,9 +1,8 @@
-import { FindOptionsWhere } from "typeorm";
-
+import { FilterQuery } from "mongoose";
 import { ISession } from "../entities/session.entity";
 
 export interface ISessionRepository {
-  create: (session: ISession) => Promise<ISession>;
-  findOne: (filters: FindOptionsWhere<ISession>) => Promise<ISession>;
-  delete: (id: string) => Promise<any>;
+  create: (user: ISession) => Promise<ISession>;
+  findOne: (filters: FilterQuery<ISession>) => Promise<ISession>;
+  delete: (_id: string) => Promise<any>;
 }

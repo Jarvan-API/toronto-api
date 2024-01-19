@@ -7,8 +7,8 @@ import { IUserRepository } from "src/domain/interfaces";
 import { BcryptService } from "src/infrastructure/config";
 
 @Injectable()
-export class SignUp {
-  private readonly logger = new Logger(SignUp.name);
+export class UserSignUp {
+  private readonly logger = new Logger(UserSignUp.name);
 
   constructor(
     @Inject(PORT.User) private readonly userRepository: IUserRepository,

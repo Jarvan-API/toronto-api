@@ -1,11 +1,13 @@
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Request, UseGuards } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
 
-import { SignUpDTO } from "src/application/dtos";
-import { ExceptionDTO } from "src/application/dtos/common.dtos";
-import { UserCreated } from "src/application/presentations";
-import { SignUp } from "src/application/use-cases";
+import { SignInDTO, SignUpDTO } from "src/application/dtos";
+import { DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
+import { UserCreated, UserLoggedIn } from "src/application/presentations";
+import { UserSignIn, UserSignUp } from "src/application/use-cases";
+import { ISession } from "src/domain/entities";
+import { AuthenticatedGuard, LocalAuthGuard } from "src/infrastructure/config";
 
 @Controller({
   path: "auth",
@@ -16,7 +18,8 @@ import { SignUp } from "src/application/use-cases";
 export class AuthControllerV1 {
   private readonly logger = new Logger(AuthControllerV1.name);
 
-  constructor(private readonly signupUseCase: SignUp) {}
+  constructor(private readonly signupUseCase: UserSignUp,
+    private readonly signInUseCase: UserSignIn) {}
 
   @Post("sign-up")
   @HttpCode(HttpStatus.CREATED)
@@ -36,5 +39,50 @@ export class AuthControllerV1 {
     const userId = await this.signupUseCase.exec(data);
 
     return { message: "New user created", info: { id: userId }, status: HttpStatus.CREATED };
+  }
+
+  @Post("sign-in")
+  @UseGuards(LocalAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Login with email and password" })
+  @ApiBody({
+    type: SignInDTO,
+  })
+  @ApiOkResponse({
+    description: "User logged",
+    type: UserLoggedIn,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    type: ExceptionDTO,
+  })
+  async signIn(@Request() req): Promise<UserLoggedIn> {
+    await this.signInUseCase.exec(req.sessionID);
+
+    return { message: "User logged", data: { session_id: req.sessionID, userStatus: req.user.status, id: req.user.id }, status: HttpStatus.OK}
+  }
+
+  @Get("/")
+  @UseGuards(ThrottlerGuard, AuthenticatedGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Check session status" })
+  @ApiOkResponse({
+    description: "User is logged correctly",
+    type: UserLoggedIn,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    type: ExceptionDTO,
+  })
+  async check(): Promise<DefaultApiResponse> {
+    return { message: "User is logged", status: HttpStatus.OK}
   }
 }

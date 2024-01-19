@@ -1,4 +1,4 @@
-import * as morgan from "morgan";
+import morgan from "morgan";
 import { Logger } from "@nestjs/common";
 import { Request, Response } from "express";
 

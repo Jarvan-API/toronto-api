@@ -7,14 +7,11 @@ import { MongooseModule, MongooseModuleFactoryOptions } from "@nestjs/mongoose";
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService): Promise<MongooseModuleFactoryOptions> => {
-        const host: string = configService.get<string>("MONGODB_HOST");
-        const user: string = configService.get<string>("MONGODB_USER");
-        const pass: string = configService.get<string>("MONGODB_PASS");
         const dbName: string = configService.get<string>("MONGODB_NAME");
-        const connect: string = configService.get<string>("MONGODB_CONNECT");
+        const uri: string = configService.get<string>("MONGODB_URI");
 
         return {
-          uri: `${connect}://${user}:${pass}@${host}`,
+          uri: `${uri}`,
           dbName,
         };
       },

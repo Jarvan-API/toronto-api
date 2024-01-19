@@ -1,6 +1,6 @@
 import { Exclude } from "class-transformer";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Types, Schema as MongooseSchema } from "mongoose";
+import { Document } from "mongoose";
 
 export interface IUser {
   _id?: string;
@@ -10,7 +10,6 @@ export interface IUser {
   password?: string;
   status: EUserStatus;
   role: EUserRole;
-  enterprise?: string | Types.ObjectId;
 }
 
 export enum EUserStatus {

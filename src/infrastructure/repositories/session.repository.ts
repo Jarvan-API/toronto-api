@@ -1,30 +1,23 @@
-import { Logger } from "@nestjs/common";
-import { FilterQuery, Model, UpdateQuery } from "mongoose";
+import { FilterQuery, Model } from "mongoose";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { Entities } from "src/application/enums";
+import { Entity } from "src/application/enums";
 import { ISession, Session } from "src/domain/entities";
 import { ISessionRepository } from "src/domain/interfaces";
 
+@Injectable()
 export class SessionRepository implements ISessionRepository {
   private readonly logger = new Logger(SessionRepository.name);
 
-  constructor(@InjectModel(Entities.Session) private readonly sessionModel: Model<Session>) {}
+  constructor(@InjectModel(Entity.Session) private readonly sessionModel: Model<Session>) {}
 
   async create(session: ISession): Promise<ISession> {
     return await this.sessionModel.create(session);
   }
 
-  async findAll(): Promise<ISession[]> {
-    return this.sessionModel.find();
-  }
-
   async findOne(filter: FilterQuery<ISession>): Promise<ISession> {
     return await this.sessionModel.findOne(filter);
-  }
-
-  async update(_id: string, data: UpdateQuery<ISession>): Promise<any> {
-    return await this.sessionModel.findOneAndUpdate({ _id }, data);
   }
 
   async delete(_id: string): Promise<any> {

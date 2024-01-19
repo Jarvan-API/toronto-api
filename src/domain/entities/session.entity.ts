@@ -1,30 +1,29 @@
-import { Prop, Schema } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
-import { IUser } from "./user.entity";
+import { Document, Types } from "mongoose";
 
 export interface ISession {
-  id?: string;
-  expiredAt?: number;
-  json?: string;
-  destroyedAt: Date;
-  user: IUser;
-  created_at?: Date;
+  _id?: string;
+  session: string;
+  expiredAt: Date;
 }
 
 @Schema({ versionKey: false, timestamps: true })
 export class Session extends Document {
   @Prop({
-    type: Date,
+    type: String,
   })
-  public expiredAt = Date.now();
+  public _id: string;
 
   @Prop({
     type: String,
   })
-  public json = "";
+  public session: string;
 
   @Prop({
     type: Date,
   })
-  public destroyedAt?: Date;
+  public expiredAt: Date;
 }
+
+export const SessionSchema = SchemaFactory.createForClass(Session);

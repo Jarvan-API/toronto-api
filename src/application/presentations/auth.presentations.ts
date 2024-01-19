@@ -18,3 +18,32 @@ export class UserCreated extends DefaultApiResponse {
   })
   info: IUserCreated;
 }
+
+export class IUserLogged {
+  @ApiProperty({
+    description: "Session ID",
+    type: String,
+  })
+  session_id: string;
+
+  @ApiProperty({
+    description: "User's current status",
+    type: String
+  })
+  userStatus: string
+
+  @ApiProperty({
+    description: "User ID",
+    type: String
+  })
+  id: string
+}
+
+
+export class UserLoggedIn extends DefaultApiResponse {
+  @ApiProperty({
+    description: "User log data",
+    type: IUserLogged
+  })
+  data: IUserLogged
+}

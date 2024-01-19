@@ -1,2 +1,2 @@
 export * from "./bcrypt.service";
-export * from "./bcrytp.module";
+export * from "./bcrypt.module";
