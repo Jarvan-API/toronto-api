@@ -18,6 +18,7 @@ export class CreateFolder {
       isPublic: data.isPublic,
       owner: new Types.ObjectId(userId),
       whitelist: [],
+      files: [],
     };
 
     const folder = await this.folderRepository.create(folderData);

@@ -14,6 +14,7 @@ services:
     container_name: cassandra-toronto-dev
     volumes:
       - cassandra-data:/var/lib/cassandra
+      - ./init-db.cql:/init-db.cql
     ports:
       - "9042:9042"
     environment:

@@ -4,8 +4,8 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post
 
 import { CreateFolderDTO, DefaultApiResponse, ExceptionDTO, SearchFolderDTO, UpdateFolderDTO } from "src/application/dtos";
 import { FolderCreated, FolderDetails, UserFoldersSearch } from "src/application/presentations";
-import { CreateFolder, GetFolder, SearchFolders, UpdateFolder } from "src/application/use-cases/folder";
 import { AuthenticatedGuard } from "src/infrastructure/config";
+import { CreateFolder, GetFolder, SearchFolders, UpdateFolder } from "src/application/use-cases";
 
 @Controller({
   path: "folder",

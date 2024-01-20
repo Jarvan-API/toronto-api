@@ -4,7 +4,7 @@ import { Inject, Injectable, Logger } from "@nestjs/common";
 import { PORT } from "src/application/enums";
 import { IUserFolderSearch } from "src/application/presentations";
 import { IFolderRepository } from "src/domain/interfaces";
-import { isVisibile } from "src/infrastructure/utils";
+import { isFolderVisibile } from "src/infrastructure/utils";
 import { SearchFolderDTO } from "src/application/dtos";
 import { IFolder } from "src/domain/entities";
 
@@ -23,7 +23,7 @@ export class SearchFolders {
     const folders = await this.folderRepository.findAll(query);
 
     return folders
-      .filter(folder => isVisibile(folder, ourUserId))
+      .filter(folder => isFolderVisibile(folder, ourUserId))
       .map(folder => {
         const ownername = folder.owner?.["firstname"] || "Unknown";
         return {
@@ -31,6 +31,7 @@ export class SearchFolders {
           name: folder.name,
           owner: { name: ownername, id: folder.owner._id.toString() },
           public: folder.isPublic,
+          fileCount: folder.files?.length,
           createdAt: folder.createdAt,
           updatedAt: folder.updatedAt,
         };

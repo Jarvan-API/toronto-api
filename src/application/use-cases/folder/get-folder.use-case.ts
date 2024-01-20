@@ -5,7 +5,7 @@ import { PORT } from "src/application/enums";
 import { FolderNotFound, UserNotAllowed } from "src/application/exceptions";
 import { IFolder } from "src/domain/entities";
 import { IFolderRepository } from "src/domain/interfaces";
-import { isVisibile } from "src/infrastructure/utils";
+import { isFolderVisibile } from "src/infrastructure/utils";
 
 @Injectable()
 export class GetFolder {
@@ -17,7 +17,7 @@ export class GetFolder {
     const folder = await this.folderRepository.findOne({ _id: new Types.ObjectId(folderId) });
 
     if (!Boolean(folder)) throw new FolderNotFound();
-    if (!isVisibile(folder, userId)) throw new UserNotAllowed();
+    if (!isFolderVisibile(folder, userId)) throw new UserNotAllowed();
 
     return folder;
   }

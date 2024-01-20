@@ -29,6 +29,7 @@ export class UpdateFolder {
     const folderData: IFolder = {
       name: data.title ?? folder.name,
       owner: folder.owner,
+      files: folder.files,
       isPublic: data.isPublic ?? folder.isPublic,
       whitelist,
     };

@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { DefaultApiResponse } from "../dtos";
 import { IFolder } from "src/domain/entities";
+
+import { DefaultApiResponse } from "../dtos";
 
 export class IFolderCreated {
   @ApiProperty({
@@ -57,6 +58,13 @@ export class IUserFolderSearch {
     example: "Folder",
   })
   name: string;
+
+  @ApiProperty({
+    description: "Folder files count",
+    type: Number,
+    example: 10,
+  })
+  fileCount: number;
 
   @ApiProperty({
     description: "Folder owner information",
