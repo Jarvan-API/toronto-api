@@ -17,7 +17,7 @@ export class FolderRepository implements IFolderRepository {
   }
 
   async findAll(filter?: FilterQuery<IFolder>): Promise<IFolder[]> {
-    return this.folderModel.find(filter);
+    return this.folderModel.find(filter).populate({ path: "owner", select: "-password" }).exec();
   }
 
   async findOne(filter: FilterQuery<IFolder>): Promise<IFolder> {

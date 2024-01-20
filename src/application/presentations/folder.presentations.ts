@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+
 import { DefaultApiResponse } from "../dtos";
 
 export class IFolderCreated {
@@ -25,6 +26,15 @@ export class FolderCreated extends DefaultApiResponse {
   info: IFolderCreated;
 }
 
+export class IFolderOwner {
+  @ApiProperty({
+    description: "Folder owner name",
+    type: String,
+    example: "Federico",
+  })
+  name;
+}
+
 export class IUserFolderSearch {
   @ApiProperty({
     description: "Folder ID",
@@ -39,6 +49,33 @@ export class IUserFolderSearch {
     example: "Folder",
   })
   name: string;
+
+  @ApiProperty({
+    description: "Folder owner information",
+    type: IFolderOwner,
+  })
+  owner: IFolderOwner;
+
+  @ApiProperty({
+    description: "Folder visibility",
+    type: Boolean,
+    example: true,
+  })
+  public: boolean;
+
+  @ApiProperty({
+    description: "Folder creation date",
+    type: Date,
+    example: "2024-01-20",
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    description: "Folder last update date",
+    type: Date,
+    example: "2024-01-20",
+  })
+  updatedAt: Date;
 }
 
 export class UserFoldersSearch extends DefaultApiResponse {

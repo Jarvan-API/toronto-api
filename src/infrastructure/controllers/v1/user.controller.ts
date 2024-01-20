@@ -1,8 +1,8 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Put, Request, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
-import { OnboardingDTO } from "src/application/dtos";
 
+import { OnboardingDTO } from "src/application/dtos";
 import { DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
 import { PendingUsers, UserProfile } from "src/application/presentations";
 import { ChangePendingUser, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";

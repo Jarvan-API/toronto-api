@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
+
 import { EUserRole, EUserStatus } from "src/application/enums";
 
 export interface IUser {

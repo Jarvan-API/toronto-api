@@ -2,13 +2,12 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
-import { ChangePendingUser, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
-import { FolderSchema, SessionSchema, UserSchema } from "src/domain/entities";
+import { GetAuthSession } from "src/application/use-cases";
+import { FolderSchema, SessionSchema } from "src/domain/entities";
+import { CreateFolder, SearchFolders, UpdateFolder } from "src/application/use-cases/folder";
 
-import { UserControllerV1 } from "../controllers";
-import { FolderRepository, SessionRepository, UserRepository } from "../repositories";
+import { FolderRepository, SessionRepository } from "../repositories";
 import { FolderControllerV1 } from "../controllers/v1/folder.controller";
-import { CreateFolder, GetFolders } from "src/application/use-cases/folder";
 
 @Module({
   imports: [
@@ -19,8 +18,9 @@ import { CreateFolder, GetFolders } from "src/application/use-cases/folder";
   ],
   controllers: [FolderControllerV1],
   providers: [
-    GetFolders,
+    SearchFolders,
     CreateFolder,
+    UpdateFolder,
     GetAuthSession,
     {
       provide: PORT.Folder,

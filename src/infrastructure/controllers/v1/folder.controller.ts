@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Post, Request, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
-import { CreateFolderDTO, DefaultApiResponse, ExceptionDTO } from "src/application/dtos";
+import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
+
+import { CreateFolderDTO, DefaultApiResponse, ExceptionDTO, UpdateFolderDTO } from "src/application/dtos";
 import { FolderCreated, UserFoldersSearch } from "src/application/presentations";
-import { CreateFolder, GetFolders } from "src/application/use-cases/folder";
+import { CreateFolder, SearchFolders, UpdateFolder } from "src/application/use-cases/folder";
 import { AuthenticatedGuard } from "src/infrastructure/config";
 
 @Controller({
@@ -16,8 +17,9 @@ export class FolderControllerV1 {
   private readonly logger = new Logger(FolderControllerV1.name);
 
   constructor(
-    private readonly getFoldersUseCase: GetFolders,
+    private readonly searchFoldersUseCase: SearchFolders,
     private readonly createFolderUseCase: CreateFolder,
+    private readonly updateFolderUseCase: UpdateFolder,
   ) {}
 
   @Post("create")
@@ -39,7 +41,7 @@ export class FolderControllerV1 {
 
     const folder = await this.createFolderUseCase.exec(data, userId);
 
-    return { message: "New user created", info: { id: folder._id, name: folder.name }, status: HttpStatus.CREATED };
+    return { message: "New folder created", info: { id: folder._id, name: folder.name }, status: HttpStatus.CREATED };
   }
 
   @Get("/:userId")
@@ -58,9 +60,39 @@ export class FolderControllerV1 {
     description: "Bad request",
     type: ExceptionDTO,
   })
-  async getFoldersFromUser(@Param("userId") userId: string): Promise<UserFoldersSearch> {
-    const folders = await this.getFoldersUseCase.exec(userId);
+  async searchFolders(@Param("userId") userId: string, @Request() req): Promise<UserFoldersSearch> {
+    const ourUserId = req.user._doc._id;
+
+    const folders = await this.searchFoldersUseCase.exec(userId, ourUserId);
 
     return { message: "Folder list retrieved successfully", folders, status: HttpStatus.OK };
+  }
+
+  @Patch("/:folderId")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Updates a folder data" })
+  @ApiParam({
+    name: "folderId",
+    description: "Folder ID",
+    type: String,
+  })
+  @ApiBody({
+    description: "Folder's new data",
+    type: UpdateFolderDTO,
+  })
+  @ApiOkResponse({
+    description: "Ok request",
+    type: DefaultApiResponse,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  async updateFolder(@Param("folderId") folderId: string, @Request() req, @Body() data: UpdateFolderDTO): Promise<DefaultApiResponse> {
+    const ourUserId = req.user._doc._id;
+
+    await this.updateFolderUseCase.exec(data, folderId, ourUserId);
+
+    return { message: "Folder updated successfully", status: HttpStatus.OK };
   }
 }

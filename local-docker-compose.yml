@@ -1,4 +1,5 @@
 version: "3"
+
 services:
   mongo:
     image: mongo
@@ -11,17 +12,18 @@ services:
     image: cassandra
     restart: always
     container_name: cassandra-toronto-dev
+    volumes:
+      - cassandra-data:/var/lib/cassandra
     ports:
       - "9042:9042"
     environment:
-      - CASSANDRA_CLUSTER_NAME=${CASSANDRA_CLUSTER}
+      - CASSANDRA_CLUSTER_NAME=${CASSANDRA_CLUSTER_NAME}
       - CASSANDRA_DC=${CASSANDRA_DC}
       - CASSANDRA_RACK=${CASSANDRA_RACK}
-    volumes:
-      - cassandra_data:/var/lib/cassandra
-
-volumes:
-  cassandra_data:
+      - CASSANDRA_ENDPOINT_SNITCH=${CASSANDRA_ENDPOINT_SNITCH}
 
 networks:
   my-network:
+
+volumes:
+  cassandra-data:

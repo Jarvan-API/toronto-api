@@ -1,6 +1,6 @@
 import { ExecutionContext, Injectable, CanActivate } from "@nestjs/common";
-import { EUserRole } from "src/application/enums";
 
+import { EUserRole } from "src/application/enums";
 import { SessionIDNotFound, SessionNotFound, UserNotAllowed } from "src/application/exceptions";
 import { GetAuthSession } from "src/application/use-cases/sessions/get-auth-session.use-case";
 import { ISession } from "src/domain/entities";
