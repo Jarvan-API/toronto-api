@@ -33,7 +33,14 @@ export class IFolderOwner {
     type: String,
     example: "Federico",
   })
-  name;
+  name: string;
+
+  @ApiProperty({
+    description: "Folder owner ID",
+    type: String,
+    example: "ddad4c48-5e39-4dba-94f8-19c4c16c446a",
+  })
+  id: string;
 }
 
 export class IUserFolderSearch {
