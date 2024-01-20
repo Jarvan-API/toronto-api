@@ -1,4 +1,5 @@
 import { HttpStatus } from "@nestjs/common";
+
 import { GenericHttpException } from "./generic-http.exceptions";
 
 export class InvalidCredentials extends GenericHttpException {

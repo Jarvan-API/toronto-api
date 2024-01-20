@@ -4,7 +4,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Entity, PORT } from "src/application/enums";
 import { GetAuthSession } from "src/application/use-cases";
 import { FolderSchema, SessionSchema } from "src/domain/entities";
-import { CreateFolder, SearchFolders, UpdateFolder } from "src/application/use-cases/folder";
+import { CreateFolder, GetFolder, SearchFolders, UpdateFolder } from "src/application/use-cases/folder";
 
 import { FolderRepository, SessionRepository } from "../repositories";
 import { FolderControllerV1 } from "../controllers/v1/folder.controller";
@@ -21,6 +21,7 @@ import { FolderControllerV1 } from "../controllers/v1/folder.controller";
     SearchFolders,
     CreateFolder,
     UpdateFolder,
+    GetFolder,
     GetAuthSession,
     {
       provide: PORT.Folder,

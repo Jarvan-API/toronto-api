@@ -2,9 +2,9 @@ import { ThrottlerGuard } from "@nestjs/throttler";
 import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
 
-import { CreateFolderDTO, DefaultApiResponse, ExceptionDTO, UpdateFolderDTO } from "src/application/dtos";
-import { FolderCreated, UserFoldersSearch } from "src/application/presentations";
-import { CreateFolder, SearchFolders, UpdateFolder } from "src/application/use-cases/folder";
+import { CreateFolderDTO, DefaultApiResponse, ExceptionDTO, SearchFolderDTO, UpdateFolderDTO } from "src/application/dtos";
+import { FolderCreated, FolderDetails, UserFoldersSearch } from "src/application/presentations";
+import { CreateFolder, GetFolder, SearchFolders, UpdateFolder } from "src/application/use-cases/folder";
 import { AuthenticatedGuard } from "src/infrastructure/config";
 
 @Controller({
@@ -18,6 +18,7 @@ export class FolderControllerV1 {
 
   constructor(
     private readonly searchFoldersUseCase: SearchFolders,
+    private readonly getFolderUseCase: GetFolder,
     private readonly createFolderUseCase: CreateFolder,
     private readonly updateFolderUseCase: UpdateFolder,
   ) {}
@@ -47,10 +48,9 @@ export class FolderControllerV1 {
   @Get("/:userId")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Gets all folder from user" })
-  @ApiParam({
-    name: "userId",
-    description: "Folder owner ID",
-    type: String,
+  @ApiBody({
+    description: "Search filter",
+    type: SearchFolderDTO,
   })
   @ApiOkResponse({
     description: "Ok request",
@@ -60,12 +60,36 @@ export class FolderControllerV1 {
     description: "Bad request",
     type: ExceptionDTO,
   })
-  async searchFolders(@Param("userId") userId: string, @Request() req): Promise<UserFoldersSearch> {
+  async searchFolders(@Body() body: SearchFolderDTO, @Request() req): Promise<UserFoldersSearch> {
     const ourUserId = req.user._doc._id;
 
-    const folders = await this.searchFoldersUseCase.exec(userId, ourUserId);
+    const folders = await this.searchFoldersUseCase.exec(body, ourUserId);
 
     return { message: "Folder list retrieved successfully", folders, status: HttpStatus.OK };
+  }
+
+  @Get("details/:folderId")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Gets all folder from user" })
+  @ApiParam({
+    name: "folderId",
+    description: "Folder ID",
+    type: String,
+  })
+  @ApiOkResponse({
+    description: "Ok request",
+    type: FolderDetails,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  async getFolder(@Param("folderId") folderId: string, @Request() req): Promise<FolderDetails> {
+    const ourUserId = req.user._doc._id;
+
+    const folder = await this.getFolderUseCase.exec(folderId, ourUserId);
+
+    return { message: "Folder details retrieved successfully", folder, status: HttpStatus.OK };
   }
 
   @Patch("/:folderId")

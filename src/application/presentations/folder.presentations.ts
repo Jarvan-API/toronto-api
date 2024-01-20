@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 import { DefaultApiResponse } from "../dtos";
+import { IFolder } from "src/domain/entities";
 
 export class IFolderCreated {
   @ApiProperty({
@@ -84,4 +85,11 @@ export class UserFoldersSearch extends DefaultApiResponse {
     type: Array,
   })
   folders: IUserFolderSearch[];
+}
+
+export class FolderDetails extends DefaultApiResponse {
+  @ApiProperty({
+    description: "Folder details",
+  })
+  folder: IFolder;
 }

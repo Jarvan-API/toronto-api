@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, Matches } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, Matches, isString } from "class-validator";
 
 export class CreateFolderDTO {
   @ApiProperty({
@@ -19,6 +19,30 @@ export class CreateFolderDTO {
   })
   @IsBoolean()
   isPublic: boolean;
+}
+
+export class SearchFolderDTO {
+  @ApiProperty({
+    description: "Folder matching title",
+    example: "Photos",
+    type: String,
+    required: true,
+  })
+  @IsOptional()
+  @IsString()
+  title: string;
+
+  @ApiProperty({
+    description: "Folder visibility settings",
+    example: true,
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  @Matches(/^[0-9a-fA-F]{24}$/, {
+    message: "owner must be a valid MongoDB ObjectId",
+  })
+  owner: string;
 }
 
 export class UpdateFolderDTO {
