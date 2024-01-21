@@ -10,6 +10,7 @@ export interface IUserProfile {
   status: EUserStatus;
   role: EUserRole;
   createdAt: Date;
+  picturePath: string;
 }
 
 export class UserProfile extends DefaultApiResponse {
@@ -32,4 +33,11 @@ export class PendingUsers extends DefaultApiResponse {
     description: "List of pending users",
   })
   users: IPendingUser[];
+}
+
+export class ProfilePictureChange extends DefaultApiResponse {
+  @ApiProperty({
+    description: "New profile picture path",
+  })
+  path: string;
 }

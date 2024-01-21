@@ -1,5 +1,6 @@
-import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Types } from "mongoose";
+import { Inject, Injectable, Logger } from "@nestjs/common";
+
 import { OnboardingDTO } from "src/application/dtos";
 import { EUserStatus, PORT } from "src/application/enums";
 import { OnboardingAlreadyMade, UserNotFound } from "src/application/exceptions";

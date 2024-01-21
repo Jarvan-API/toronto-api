@@ -2,11 +2,11 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
-import { ChangePendingUser, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
+import { ChangePendingUser, ChangeProfilePicture, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
 import { SessionSchema, UserSchema } from "src/domain/entities";
 
 import { UserControllerV1 } from "../controllers";
-import { SessionRepository, UserRepository } from "../repositories";
+import { SessionRepository, StorageRepository, UserRepository } from "../repositories";
 
 @Module({
   imports: [
@@ -22,6 +22,7 @@ import { SessionRepository, UserRepository } from "../repositories";
     ChangePendingUser,
     Onboarding,
     GetAuthSession,
+    ChangeProfilePicture,
     {
       provide: PORT.User,
       useClass: UserRepository,
@@ -29,6 +30,10 @@ import { SessionRepository, UserRepository } from "../repositories";
     {
       provide: PORT.Session,
       useClass: SessionRepository,
+    },
+    {
+      provide: PORT.Storage,
+      useClass: StorageRepository,
     },
   ],
   exports: [],

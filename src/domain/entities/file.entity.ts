@@ -24,7 +24,7 @@ export class File extends Document {
   @Prop({ type: [{ type: Types.ObjectId, ref: "FileChunks" }], required: true })
   chunks: Types.ObjectId[];
 
-  @Prop({ type: [FileMetadataSchema], required: true })
+  @Prop({ type: FileMetadataSchema, required: true })
   metadata: IFileMetadata;
 
   @Prop({ required: true, enum: EFileStatus })

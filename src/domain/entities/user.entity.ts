@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
 import { EUserRole, EUserStatus } from "src/application/enums";
+import { IUserPictureMetadata, UserPictureMetadataSchema } from "./user-picture-metadata.entity";
 
 export interface IUser {
   _id?: string;
@@ -12,6 +13,7 @@ export interface IUser {
   status: EUserStatus;
   role: EUserRole;
   dob?: Date;
+  pictureMetadata?: IUserPictureMetadata;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -59,6 +61,9 @@ export class User extends Document {
     type: Date,
   })
   dob: Date;
+
+  @Prop({ type: UserPictureMetadataSchema })
+  pictureMetadata: IUserPictureMetadata;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

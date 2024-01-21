@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Types } from "mongoose";
+
 import { PORT } from "src/application/enums";
 import { IUserProfile } from "src/application/presentations";
 import { IUserRepository } from "src/domain/interfaces";
@@ -20,6 +21,7 @@ export class GetUserProfile {
       status: user.status,
       role: user.role,
       createdAt: user.createdAt,
+      picturePath: user.pictureMetadata?.path,
     };
 
     return userProfile;

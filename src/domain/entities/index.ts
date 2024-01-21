@@ -5,3 +5,4 @@ export * from "./file.entity";
 export * from "./folder.entity";
 export * from "./chunk.entity";
 export * from "./file-metadata.entity";
+export * from "./user-picture-metadata.entity";

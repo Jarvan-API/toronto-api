@@ -1,3 +1,6 @@
+import session from "express-session";
+import passport from "passport";
+import MongoStore from "connect-mongo";
 import helmet from "helmet";
 import { ConfigService } from "@nestjs/config";
 import { HttpAdapterHost, NestFactory } from "@nestjs/core";
@@ -6,9 +9,6 @@ import { Logger, ValidationPipe, VersioningType } from "@nestjs/common";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./infrastructure/utils";
 import { morganConfig, swaggerConfig } from "./infrastructure/tools";
-import session from "express-session";
-import passport from "passport";
-import MongoStore from "connect-mongo";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
