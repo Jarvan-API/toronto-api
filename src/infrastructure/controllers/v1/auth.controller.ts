@@ -17,8 +17,10 @@ import { AuthenticatedGuard, LocalAuthGuard } from "src/infrastructure/config";
 export class AuthControllerV1 {
   private readonly logger = new Logger(AuthControllerV1.name);
 
-  constructor(private readonly signupUseCase: UserSignUp,
-    private readonly signInUseCase: UserSignIn) {}
+  constructor(
+    private readonly signupUseCase: UserSignUp,
+    private readonly signInUseCase: UserSignIn,
+  ) {}
 
   @Post("sign-up")
   @HttpCode(HttpStatus.CREATED)
@@ -37,7 +39,7 @@ export class AuthControllerV1 {
   async signUp(@Body() data: SignUpDTO): Promise<UserCreated> {
     const userId = await this.signupUseCase.exec(data);
 
-    return { message: "New user created", info: { id: userId }, status: HttpStatus.CREATED };
+    return { message: "New user created", data: { id: userId }, status: HttpStatus.CREATED };
   }
 
   @Post("sign-in")
@@ -62,7 +64,7 @@ export class AuthControllerV1 {
   async signIn(@Request() req): Promise<UserLoggedIn> {
     await this.signInUseCase.exec(req.sessionID);
 
-    return { message: "User logged", data: { session_id: req.sessionID, userStatus: req.user.status, id: req.user.id }, status: HttpStatus.OK}
+    return { message: "User logged", data: { session_id: req.sessionID, userStatus: req.user.status, id: req.user.id }, status: HttpStatus.OK };
   }
 
   @Get("/")
@@ -82,6 +84,6 @@ export class AuthControllerV1 {
     type: ExceptionDTO,
   })
   async check(): Promise<DefaultApiResponse> {
-    return { message: "User is logged", status: HttpStatus.OK}
+    return { message: "User is logged", status: HttpStatus.OK };
   }
 }

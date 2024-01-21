@@ -4,4 +4,5 @@ export enum Entity {
   Chat = "Chat",
   Folder = "Folder",
   File = "File",
+  FileChunk = "FileChunk",
 }

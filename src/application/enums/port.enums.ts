@@ -4,4 +4,6 @@ export enum PORT {
   Session = "Session.Port",
   Folder = "Folder.Port",
   File = "File.Port",
+  FileChunk = "FileChunk.Port",
+  Storage = "Storage.Port",
 }

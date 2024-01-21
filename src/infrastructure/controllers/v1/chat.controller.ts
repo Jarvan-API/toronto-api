@@ -1,6 +1,7 @@
+import { ThrottlerGuard } from "@nestjs/throttler";
 import { Controller, Logger, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { ThrottlerGuard } from "@nestjs/throttler";
+
 import { GetChats } from "src/application/use-cases";
 import { AuthenticatedGuard } from "src/infrastructure/config";
 

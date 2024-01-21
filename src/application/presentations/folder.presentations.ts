@@ -25,7 +25,7 @@ export class FolderCreated extends DefaultApiResponse {
     description: "The data of the response",
     type: IFolderCreated,
   })
-  info: IFolderCreated;
+  data: IFolderCreated;
 }
 
 export class IFolderOwner {

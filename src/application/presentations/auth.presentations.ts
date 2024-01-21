@@ -16,7 +16,7 @@ export class UserCreated extends DefaultApiResponse {
     description: "The data of the response",
     type: IUserCreated,
   })
-  info: IUserCreated;
+  data: IUserCreated;
 }
 
 export class IUserLogged {

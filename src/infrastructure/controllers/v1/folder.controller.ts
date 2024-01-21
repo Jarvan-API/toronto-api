@@ -42,7 +42,7 @@ export class FolderControllerV1 {
 
     const folder = await this.createFolderUseCase.exec(data, userId);
 
-    return { message: "New folder created", info: { id: folder._id, name: folder.name }, status: HttpStatus.CREATED };
+    return { message: "New folder created", data: { id: folder._id, name: folder.name }, status: HttpStatus.CREATED };
   }
 
   @Get("/:userId")

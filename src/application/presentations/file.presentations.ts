@@ -18,7 +18,7 @@ export class FileUploaded extends DefaultApiResponse {
     description: "The data of the response",
     type: IFileUploaded,
   })
-  info: IFileUploaded;
+  data: IFileUploaded;
 }
 
 export class ISearchFile {

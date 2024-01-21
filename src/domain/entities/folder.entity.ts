@@ -7,7 +7,7 @@ export interface IFolder {
   owner: Types.ObjectId;
   whitelist: Types.ObjectId[];
   isPublic: boolean;
-  files: string[];
+  files: Types.ObjectId[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -23,8 +23,8 @@ export class Folder extends Document {
   @Prop({ type: [{ type: Types.ObjectId, ref: "User" }], default: [] })
   whitelist: Types.ObjectId[];
 
-  @Prop({ type: [{ type: String }], default: [] })
-  files: string[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: "File" }], default: [] })
+  files: Types.ObjectId[];
 
   @Prop({ required: true, default: false })
   isPublic: boolean;

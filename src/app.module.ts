@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 
 import { AppController } from "./infrastructure/controllers";
-import { BcryptModule, CassandraModule, MongoDBModule, SentryModule } from "./infrastructure/config";
+import { BcryptModule, MongoDBModule, SentryModule } from "./infrastructure/config";
 import { AuthModule, ChatModule, FileModule, FolderModule, UserModule } from "./infrastructure/modules";
 import { SentryMiddleware } from "./infrastructure/middlewares";
 
@@ -21,7 +21,6 @@ import { SentryMiddleware } from "./infrastructure/middlewares";
       ],
     }),
     MongoDBModule,
-    CassandraModule,
     BcryptModule,
     AuthModule,
     FolderModule,
