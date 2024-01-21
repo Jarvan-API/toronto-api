@@ -6,7 +6,7 @@ import { EUserStatus } from "src/application/enums";
 import { ISession } from "src/domain/entities";
 
 @Injectable()
-export class AuthenticatedGuard implements CanActivate {
+export class LowAuthenticatedGuard implements CanActivate {
   constructor(private readonly getSessionUseCase: GetAuthSession) {}
 
   async canActivate(context: ExecutionContext) {
@@ -19,7 +19,7 @@ export class AuthenticatedGuard implements CanActivate {
 
     if (!session) throw new SessionNotFound();
 
-    if (request.user._doc.status !== EUserStatus.ACTIVE) throw new UserNotAllowed();
+    if (request.user._doc.status === EUserStatus.BLOCKED) throw new UserNotAllowed();
 
     return true;
   }

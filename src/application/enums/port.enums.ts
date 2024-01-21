@@ -6,4 +6,5 @@ export enum PORT {
   File = "File.Port",
   FileChunk = "FileChunk.Port",
   Storage = "Storage.Port",
+  AdminLog = "AdminLog.Port",
 }

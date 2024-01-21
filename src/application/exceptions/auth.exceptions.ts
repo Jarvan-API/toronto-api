@@ -49,3 +49,9 @@ export class EmailAlreadyUsed extends GenericHttpException {
     super("This email is already used.", HttpStatus.BAD_REQUEST, "EMAIL_DUP");
   }
 }
+
+export class TargetDidNotMetRequirements extends GenericHttpException {
+  constructor() {
+    super("Targeted user did not met the expected requirements", HttpStatus.BAD_REQUEST, "TARGET_UNAVAILABLE");
+  }
+}

@@ -50,7 +50,7 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
+      forbidUnknownValues: false,
       validationError: {
         target: false,
       },

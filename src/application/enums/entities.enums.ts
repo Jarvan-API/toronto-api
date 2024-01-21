@@ -5,4 +5,5 @@ export enum Entity {
   Folder = "Folder",
   File = "File",
   FileChunk = "FileChunk",
+  AdminLog = "AdminLog",
 }

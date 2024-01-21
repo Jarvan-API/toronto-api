@@ -2,24 +2,25 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
-import { ChangePendingUser, ChangeProfilePicture, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
-import { SessionSchema, UserSchema } from "src/domain/entities";
+import { ChangeUserStatus, ChangeProfilePicture, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
+import { AdminLogSchema, SessionSchema, UserSchema } from "src/domain/entities";
 
 import { UserControllerV1 } from "../controllers";
-import { SessionRepository, StorageRepository, UserRepository } from "../repositories";
+import { AdminLogRepository, SessionRepository, StorageRepository, UserRepository } from "../repositories";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Entity.User, schema: UserSchema },
       { name: Entity.Session, schema: SessionSchema },
+      { name: Entity.AdminLog, schema: AdminLogSchema },
     ]),
   ],
   controllers: [UserControllerV1],
   providers: [
     GetUserProfile,
     ListPendingUsers,
-    ChangePendingUser,
+    ChangeUserStatus,
     Onboarding,
     GetAuthSession,
     ChangeProfilePicture,
@@ -34,6 +35,10 @@ import { SessionRepository, StorageRepository, UserRepository } from "../reposit
     {
       provide: PORT.Storage,
       useClass: StorageRepository,
+    },
+    {
+      provide: PORT.AdminLog,
+      useClass: AdminLogRepository,
     },
   ],
   exports: [],

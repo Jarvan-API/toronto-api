@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsString } from "class-validator";
 
 export class ExceptionDTO {
   @ApiProperty({
@@ -43,4 +44,15 @@ export class DefaultApiResponse {
     example: 200,
   })
   status: number;
+}
+
+export class DefaultAdminActionApiRequest {
+  @ApiProperty({
+    description: "Reason of the action",
+    type: String,
+    example: "Because I wanted to",
+    default: "Unknown",
+  })
+  @IsString()
+  action_reason: string;
 }

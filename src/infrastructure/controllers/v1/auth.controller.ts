@@ -6,7 +6,7 @@ import { SignInDTO, SignUpDTO } from "src/application/dtos";
 import { DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
 import { UserCreated, UserLoggedIn } from "src/application/presentations";
 import { UserSignIn, UserSignUp } from "src/application/use-cases";
-import { AuthenticatedGuard, LocalAuthGuard } from "src/infrastructure/config";
+import { AuthenticatedGuard, LocalAuthGuard, LowAuthenticatedGuard } from "src/infrastructure/config";
 
 @Controller({
   path: "auth",
@@ -68,7 +68,7 @@ export class AuthControllerV1 {
   }
 
   @Get("/")
-  @UseGuards(ThrottlerGuard, AuthenticatedGuard)
+  @UseGuards(ThrottlerGuard, LowAuthenticatedGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Check session status" })
   @ApiOkResponse({

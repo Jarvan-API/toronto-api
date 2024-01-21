@@ -1,6 +1,6 @@
 import { ExecutionContext, Injectable, CanActivate } from "@nestjs/common";
 
-import { EUserRole } from "src/application/enums";
+import { EUserRole, EUserStatus } from "src/application/enums";
 import { SessionIDNotFound, SessionNotFound, UserNotAllowed } from "src/application/exceptions";
 import { GetAuthSession } from "src/application/use-cases/sessions/get-auth-session.use-case";
 import { ISession } from "src/domain/entities";
@@ -19,7 +19,7 @@ export class AuthenticatedAdminGuard implements CanActivate {
 
     if (!session) throw new SessionNotFound();
 
-    if (request.user._doc.role !== EUserRole.SUDO) throw new UserNotAllowed();
+    if (request.user._doc.role !== EUserRole.SUDO || request.user._doc.status !== EUserStatus.ACTIVE) throw new UserNotAllowed();
 
     return true;
   }

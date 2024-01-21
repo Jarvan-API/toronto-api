@@ -4,17 +4,18 @@ import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, 
 import { ThrottlerGuard } from "@nestjs/throttler";
 
 import { OnboardingDTO } from "src/application/dtos";
-import { DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
+import { DefaultAdminActionApiRequest, DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
+import { EUserStatus } from "src/application/enums";
 import { PendingUsers, ProfilePictureChange, UserProfile } from "src/application/presentations";
-import { ChangePendingUser, ChangeProfilePicture, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
-import { AuthenticatedAdminGuard, AuthenticatedGuard } from "src/infrastructure/config";
+import { ChangeProfilePicture, ChangeUserStatus, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
+import { AuthenticatedAdminGuard, AuthenticatedGuard, LowAuthenticatedGuard } from "src/infrastructure/config";
 
 @Controller({
   path: "user",
   version: "1",
 })
 @ApiTags("User")
-@UseGuards(ThrottlerGuard, AuthenticatedGuard)
+@UseGuards(ThrottlerGuard)
 export class UserControllerV1 {
   private readonly logger = new Logger(UserControllerV1.name);
 
@@ -22,12 +23,13 @@ export class UserControllerV1 {
     private readonly getUserProfileUseCase: GetUserProfile,
     private readonly onboardingUseCase: Onboarding,
     private readonly listPendingUsersUseCase: ListPendingUsers,
-    private readonly changePendingUserUseCase: ChangePendingUser,
+    private readonly changeUserStatusUseCase: ChangeUserStatus,
     private readonly changeProfilePictureUseCase: ChangeProfilePicture,
   ) {}
 
   @Get("/")
   @HttpCode(HttpStatus.FOUND)
+  @UseGuards(LowAuthenticatedGuard)
   @ApiOperation({ summary: "Search for current logged user's information" })
   @ApiOkResponse({
     description: "User found",
@@ -47,6 +49,7 @@ export class UserControllerV1 {
 
   @Put("/onboarding")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(LowAuthenticatedGuard)
   @ApiOperation({ summary: "Complete user's information" })
   @ApiBody({
     description: "Onboarding data",
@@ -102,8 +105,9 @@ export class UserControllerV1 {
     description: "Bad request",
     type: ExceptionDTO,
   })
-  async acceptPendingUser(@Param("userId") userId: string): Promise<DefaultApiResponse> {
-    await this.changePendingUserUseCase.exec(userId, true);
+  async acceptPendingUser(@Param("userId") userId: string, @Request() req): Promise<DefaultApiResponse> {
+    const adminId = req.user._doc._id;
+    await this.changeUserStatusUseCase.exec(EUserStatus.ACTIVE, adminId, userId, this.acceptPendingUser.name, "", EUserStatus.PENDING_ONBOARDING);
 
     return { message: "Pending user accepted successfully", status: HttpStatus.OK };
   }
@@ -117,6 +121,10 @@ export class UserControllerV1 {
     description: "Pending user ID",
     type: String,
   })
+  @ApiBody({
+    description: "Reject information",
+    type: DefaultAdminActionApiRequest,
+  })
   @ApiOkResponse({
     description: "Ok request",
     type: DefaultApiResponse,
@@ -125,15 +133,17 @@ export class UserControllerV1 {
     description: "Bad request",
     type: ExceptionDTO,
   })
-  async rejectPendingUser(@Param("userId") userId: string): Promise<DefaultApiResponse> {
-    await this.changePendingUserUseCase.exec(userId, false);
+  async rejectPendingUser(@Param("userId") userId: string, @Request() req, @Body() data: DefaultAdminActionApiRequest): Promise<DefaultApiResponse> {
+    const adminId = req.user._doc._id;
+
+    await this.changeUserStatusUseCase.exec(EUserStatus.BLOCKED, adminId, userId, this.rejectPendingUser.name, data.action_reason, EUserStatus.PENDING_ONBOARDING);
 
     return { message: "Pending user rejected successfully", status: HttpStatus.OK };
   }
 
   @Put("/change-picture")
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthenticatedAdminGuard)
+  @UseGuards(AuthenticatedGuard)
   @ApiOperation({ summary: "Changes profile picture from user" })
   @ApiOkResponse({
     description: "Ok request",
@@ -150,5 +160,34 @@ export class UserControllerV1 {
     const picture = await this.changeProfilePictureUseCase.exec(file, userId);
 
     return { message: "Profile picture changed successfully", path: picture.path, status: HttpStatus.OK };
+  }
+
+  @Put("block/:userId")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthenticatedAdminGuard)
+  @ApiOperation({ summary: "Blocks user" })
+  @ApiParam({
+    name: "userId",
+    description: "Pending user ID",
+    type: String,
+  })
+  @ApiBody({
+    description: "Block information",
+    type: DefaultAdminActionApiRequest,
+  })
+  @ApiOkResponse({
+    description: "Ok request",
+    type: DefaultApiResponse,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  async blockUser(@Param("userId") userId: string, @Body() data: DefaultAdminActionApiRequest, @Request() req): Promise<DefaultApiResponse> {
+    const adminId = req.user._doc._id;
+
+    await this.changeUserStatusUseCase.exec(EUserStatus.BLOCKED, adminId, userId, this.blockUser.name, data.action_reason);
+
+    return { message: "User blocked successfully", status: HttpStatus.OK };
   }
 }
