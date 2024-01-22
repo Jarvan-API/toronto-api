@@ -40,7 +40,7 @@ export class UserControllerV1 {
     type: ExceptionDTO,
   })
   async getProfile(@Request() req): Promise<UserProfile> {
-    const userId = req.user?._doc?._id;
+    const userId = req.user._doc._id;
 
     const user = await this.getUserProfileUseCase.exec(userId);
 

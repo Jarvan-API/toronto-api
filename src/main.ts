@@ -31,13 +31,11 @@ async function bootstrap() {
     dbName: MONGODB_NAME,
   });
 
-  console.log(store);
-
   app.use(
     session({
       secret: SESSION_SECRET,
       resave: false,
-      saveUninitialized: true,
+      saveUninitialized: false,
       store,
     }),
   );

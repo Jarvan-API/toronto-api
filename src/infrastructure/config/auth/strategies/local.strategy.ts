@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-local";
-import { VerifySignUp } from "src/application/use-cases/sessions/verify-sign-up.use-case";
 
+import { VerifySignUp } from "src/application/use-cases/sessions/verify-sign-up.use-case";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -14,7 +14,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(req:any, email: string, password: string): Promise<any> {
-    return await this.verifySignUpUseCase.exec({ email, password });
+  async validate(req: any, email: string, password: string): Promise<any> {
+    const validation = await this.verifySignUpUseCase.exec({ email, password });
+    return validation;
   }
 }

@@ -19,7 +19,7 @@ export class LowAuthenticatedGuard implements CanActivate {
 
     if (!session) throw new SessionNotFound();
 
-    if (request.user._doc.status === EUserStatus.BLOCKED) throw new UserNotAllowed();
+    if (request.user?._doc?.status === EUserStatus.BLOCKED) throw new UserNotAllowed();
 
     return true;
   }

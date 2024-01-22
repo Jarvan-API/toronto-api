@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PassportSerializer } from "@nestjs/passport";
+
 import { IUser } from "src/domain/entities";
 
 @Injectable()
