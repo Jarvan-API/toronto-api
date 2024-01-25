@@ -2,7 +2,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Injectable, Logger } from "@nestjs/common";
 import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
 
-import { File, FileChunk, IFileChunk } from "src/domain/entities";
+import { FileChunk, IFileChunk } from "src/domain/entities";
 import { Entity } from "src/application/enums";
 import { IFileChunkRepository } from "src/domain/interfaces";
 

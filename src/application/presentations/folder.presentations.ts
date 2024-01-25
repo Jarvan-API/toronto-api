@@ -108,3 +108,22 @@ export class FolderDetails extends DefaultApiResponse {
   })
   folder: IFolder;
 }
+
+export class IFolderDeleted {
+  file_count: number;
+  free_space: number;
+}
+
+export class FolderDeleted extends DefaultApiResponse {
+  @ApiProperty({
+    description: "The amount of files deleted",
+    type: Number,
+  })
+  file_count: number;
+
+  @ApiProperty({
+    description: "The amount of free disk cleared",
+    type: Number,
+  })
+  free_space: number;
+}

@@ -75,3 +75,16 @@ export class UpdateFolderDTO {
   })
   permission?: string;
 }
+
+export class DeleteFolderDTO {
+  @ApiProperty({
+    description: "Folder on which files are going to be moved towards",
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  @Matches(/^[0-9a-fA-F]{24}$/, {
+    message: "folder must be a valid MongoDB ObjectId",
+  })
+  folder?: string;
+}

@@ -31,6 +31,7 @@ export class UpdateFolder {
       owner: folder.owner,
       files: folder.files,
       isPublic: data.isPublic ?? folder.isPublic,
+      storagePath: folder.storagePath,
       whitelist,
     };
 

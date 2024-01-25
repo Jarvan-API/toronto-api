@@ -4,7 +4,7 @@ import path from "path";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { IStorageRepository } from "src/domain/interfaces";
-import { IStorageUploadOptions } from "src/application/types";
+import { IStorageDeleteOptions, IStorageUploadOptions } from "src/application/types";
 
 @Injectable()
 export class StorageRepository implements IStorageRepository {
@@ -26,6 +26,31 @@ export class StorageRepository implements IStorageRepository {
     } catch (error) {
       this.logger.error(`Error during file upload: ${error.message}`);
       throw new error();
+    }
+  }
+
+  async move(filePath: string, destinationPath: string): Promise<string> {
+    try {
+      const filename = path.basename(filePath);
+      const newFilePath = path.join(destinationPath, filename);
+
+      await fs.mkdir(path.dirname(newFilePath), { recursive: true });
+      await fs.rename(filePath, newFilePath);
+
+      return newFilePath;
+    } catch (error) {
+      this.logger.error(`Error during file move: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async delete(filePath: string, options?: IStorageDeleteOptions): Promise<void> {
+    try {
+      if (options.recursive) await fs.rm(filePath, { recursive: true, force: true });
+      else await fs.unlink(filePath);
+    } catch (error) {
+      this.logger.error(`Error during file deletion: ${error.message}`);
+      throw error;
     }
   }
 }

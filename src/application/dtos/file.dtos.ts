@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from "class-validator";
 
 export class UploadFileDTO {
   @ApiProperty({ description: "File name", type: String, example: "photo.jpg" })
@@ -51,4 +51,36 @@ export class UploadChunkDTO {
 
   @IsNumber()
   totalChunks: number;
+}
+
+export class IMovingFile {
+  @ApiProperty({
+    description: "File thats going to be moved",
+    type: String,
+  })
+  @IsString()
+  @Matches(/^[0-9a-fA-F]{24}$/, {
+    message: "file_id must be a valid MongoDB ObjectId",
+  })
+  file_id: string;
+}
+
+export class MoveFilesDTO {
+  @ApiProperty({
+    description: "List of files that are going to be moved",
+    type: Array,
+  })
+  @IsOptional()
+  @IsArray()
+  files?: IMovingFile[];
+
+  @ApiProperty({
+    description: "Target folder ID",
+    type: String,
+  })
+  @IsString()
+  @Matches(/^[0-9a-fA-F]{24}$/, {
+    message: "folder_id must be a valid MongoDB ObjectId",
+  })
+  folder_id: string;
 }

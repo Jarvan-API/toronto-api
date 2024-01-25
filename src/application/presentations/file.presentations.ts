@@ -42,3 +42,27 @@ export class FilesList extends SearchDefaultApiResponse {
   })
   results: ISearchFile[];
 }
+
+export class IFileInitialized {
+  @ApiProperty({
+    description: "File ID",
+    type: String,
+    example: "ddad4c48-5e39-4dba-94f8-19c4c16c446a",
+  })
+  id: string;
+
+  @ApiProperty({
+    description: "File name",
+    type: String,
+    example: "File A",
+  })
+  name: string;
+}
+
+export class FileInitialized extends DefaultApiResponse {
+  @ApiProperty({
+    description: "The data of the response",
+    type: IFileInitialized,
+  })
+  data: IFileInitialized;
+}

@@ -8,6 +8,7 @@ export interface IFileChunk {
   status: EChunkStatus;
   sum: string;
   storagePath: string;
+  storageName: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -34,6 +35,9 @@ export class FileChunk extends Document {
 
   @Prop({ required: true })
   storagePath: string;
+
+  @Prop({ required: true })
+  storageName: string;
 }
 
 export const FileChunkSchema = SchemaFactory.createForClass(FileChunk);

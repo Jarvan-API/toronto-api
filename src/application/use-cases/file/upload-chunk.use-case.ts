@@ -33,19 +33,17 @@ export class UploadChunk {
     if (!Boolean(folder)) throw new FolderNotFound();
     if (!isFolderVisibile(folder, userId)) throw new UserNotAllowed();
 
-    const basePath = this.basePath;
-    const sanitizedFolderName = folder.name.replace(/[^a-zA-Z0-9-_]/g, "_");
-    const sanitizedFileId = fileId.replace(/[^a-zA-Z0-9-_]/g, "_");
+    const sanitizedFilePath = fileId.replace(/[^a-zA-Z0-9-_]/g, "_") + "_" + data.chunkNumber;
+    const desiredPath = path.join(folder.storagePath, sanitizedFilePath);
 
-    const desiredPath = path.join(basePath, folder.owner._id.toString(), sanitizedFolderName, sanitizedFileId);
-
-    const storagePath: string = await this.storageRepository.upload(file, desiredPath);
+    const storagePath: string = await this.storageRepository.upload(file, desiredPath, { forceName: sanitizedFilePath });
 
     const fileChunk: IFileChunk = {
       sequence: data.chunkNumber,
       size: file.size,
       status: EChunkStatus.COMPLETE,
       storagePath: storagePath,
+      storageName: sanitizedFilePath,
       sum: this._generateChecksum(file.buffer),
     };
 

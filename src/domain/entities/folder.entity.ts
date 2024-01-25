@@ -8,6 +8,7 @@ export interface IFolder {
   whitelist: Types.ObjectId[];
   isPublic: boolean;
   files: Types.ObjectId[];
+  storagePath: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -28,6 +29,9 @@ export class Folder extends Document {
 
   @Prop({ required: true, default: false })
   isPublic: boolean;
+
+  @Prop({ type: String, required: true })
+  storagePath: string;
 }
 
 export const FolderSchema = SchemaFactory.createForClass(Folder);

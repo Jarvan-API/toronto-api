@@ -1,11 +1,11 @@
 import { ThrottlerGuard } from "@nestjs/throttler";
 import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
 
-import { CreateFolderDTO, DefaultApiResponse, ExceptionDTO, SearchFolderDTO, UpdateFolderDTO } from "src/application/dtos";
+import { CreateFolderDTO, DefaultApiResponse, DeleteFolderDTO, ExceptionDTO, SearchFolderDTO, UpdateFolderDTO } from "src/application/dtos";
 import { FolderCreated, FolderDetails, UserFoldersSearch } from "src/application/presentations";
 import { AuthenticatedGuard } from "src/infrastructure/config";
-import { CreateFolder, GetFolder, SearchFolders, UpdateFolder } from "src/application/use-cases";
+import { CreateFolder, DeleteFolder, GetFolder, MoveFiles, SearchFolders, UpdateFolder } from "src/application/use-cases";
 
 @Controller({
   path: "folder",
@@ -21,6 +21,8 @@ export class FolderControllerV1 {
     private readonly getFolderUseCase: GetFolder,
     private readonly createFolderUseCase: CreateFolder,
     private readonly updateFolderUseCase: UpdateFolder,
+    private readonly deleteFolderUseCase: DeleteFolder,
+    private readonly moveFilesToFolderUseCase: MoveFiles,
   ) {}
 
   @Post("create")
@@ -118,5 +120,35 @@ export class FolderControllerV1 {
     await this.updateFolderUseCase.exec(data, folderId, ourUserId);
 
     return { message: "Folder updated successfully", status: HttpStatus.OK };
+  }
+
+  @Delete("/:folderId")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Removes a folder" })
+  @ApiParam({
+    name: "folderId",
+    description: "Folder ID",
+    type: String,
+  })
+  @ApiBody({
+    description: "Folder's new data",
+    type: DeleteFolderDTO,
+  })
+  @ApiOkResponse({
+    description: "Ok request",
+    type: DefaultApiResponse,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  async deleteFolder(@Param("folderId") folderId: string, @Request() req, @Body() data: DeleteFolderDTO): Promise<DefaultApiResponse> {
+    const ourUserId = req.user._doc._id;
+
+    if (Boolean(data.folder)) await this.moveFilesToFolderUseCase.exec({ folder_id: data.folder }, folderId, ourUserId);
+
+    await this.deleteFolderUseCase.exec(folderId, ourUserId);
+
+    return { message: "Folder deleted successfully", status: HttpStatus.OK };
   }
 }

@@ -6,6 +6,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { AuthenticatedGuard } from "src/infrastructure/config";
 import { DefaultApiResponse, InitializeFileDTO, UploadChunkDTO } from "src/application/dtos";
 import { InitializeFile, UploadChunk } from "src/application/use-cases";
+import { FileInitialized } from "src/application/presentations";
 
 @Controller({
   path: "file",
@@ -22,11 +23,11 @@ export class FileControllerV1 {
   ) {}
 
   @Post(":folderId/initialize")
-  async initializeUpload(@Param("folderId") folderId: string, @Body() body: InitializeFileDTO, @Request() req): Promise<DefaultApiResponse> {
+  async initializeUpload(@Param("folderId") folderId: string, @Body() body: InitializeFileDTO, @Request() req): Promise<FileInitialized> {
     const userId = req.user._doc._id;
 
-    await this.initializeFileUseCase.exec(body, folderId, userId);
-    return { message: "File initialized successfully", status: HttpStatus.OK };
+    const file = await this.initializeFileUseCase.exec(body, folderId, userId);
+    return { message: "File initialized successfully", data: { name: file.metadata?.originalName, id: file._id.toString() }, status: HttpStatus.OK };
   }
 
   @Post(":folderId/:fileId/upload-chunk")

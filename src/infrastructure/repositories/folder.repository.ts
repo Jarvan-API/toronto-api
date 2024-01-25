@@ -31,4 +31,22 @@ export class FolderRepository implements IFolderRepository {
   async delete(_id: string): Promise<any> {
     return await this.folderModel.deleteOne({ _id: new Types.ObjectId(_id) });
   }
+
+  async addFile(folderId: string, fileId: string): Promise<IFolder> {
+    try {
+      return await this.folderModel.findOneAndUpdate({ _id: new Types.ObjectId(folderId) }, { $push: { files: new Types.ObjectId(fileId) } }, { new: true });
+    } catch (error) {
+      this.logger.error(`Error adding file to folder: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async removeFile(folderId: string, fileId: string): Promise<IFolder> {
+    try {
+      return await this.folderModel.findOneAndUpdate({ _id: new Types.ObjectId(folderId) }, { $pull: { files: new Types.ObjectId(fileId) } }, { new: true });
+    } catch (error) {
+      this.logger.error(`Error removing file from folder: ${error.message}`);
+      throw error;
+    }
+  }
 }

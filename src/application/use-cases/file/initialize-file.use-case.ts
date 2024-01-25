@@ -40,8 +40,7 @@ export class InitializeFile {
     const result = await this.fileRepository.create(file);
 
     // store file on folder
-    const files = folder.files?.map(file => file?._id);
-    await this.folderRepository.update(folder._id, { files: [...files, file._id] });
+    await this.folderRepository.addFile(folder._id.toString(), result._id.toString());
 
     return result;
   }
