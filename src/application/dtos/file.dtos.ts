@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, Matches } from "class-validator";
+import { IsArray, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, Matches } from "class-validator";
 
 export class UploadFileDTO {
   @ApiProperty({ description: "File name", type: String, example: "photo.jpg" })
@@ -46,11 +46,20 @@ export class InitializeFileDTO {
 }
 
 export class UploadChunkDTO {
-  @IsNumber()
+  @ApiProperty({ description: "Chunk number of the file being uploaded", example: 1 })
+  @IsNotEmpty()
+  @IsString()
   chunkNumber: number;
 
-  @IsNumber()
+  @ApiProperty({ description: "Total number of chunks for the file", example: 10 })
+  @IsNotEmpty()
+  @IsString()
   totalChunks: number;
+
+  @ApiProperty({ description: "The file chunk being uploaded", type: "file", format: "binary" })
+  @IsNotEmpty()
+  @IsObject()
+  file: any;
 }
 
 export class IMovingFile {

@@ -8,6 +8,7 @@ export interface IFolderRepository {
   findOne: (filters: FilterQuery<IFolder>) => Promise<IFolder>;
   update: (_id: string, data: UpdateQuery<IFolder>) => Promise<any>;
   delete: (_id: string) => Promise<any>;
+  findByFile: (fileId: string) => Promise<IFolder>;
   addFile: (folderId: string, fileId: string) => Promise<IFolder>;
   removeFile: (folderId: string, fileId: string) => Promise<IFolder>;
 }

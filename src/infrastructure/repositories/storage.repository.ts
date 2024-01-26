@@ -19,7 +19,6 @@ export class StorageRepository implements IStorageRepository {
     try {
       const filePath = path.join(desiredPath, filename);
       await fs.mkdir(path.dirname(filePath), { recursive: true });
-
       await fs.writeFile(filePath, file.buffer);
 
       return filePath;

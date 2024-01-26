@@ -49,4 +49,14 @@ export class FolderRepository implements IFolderRepository {
       throw error;
     }
   }
+
+  async findByFile(fileId: string): Promise<IFolder> {
+    try {
+      const fileObjectId = new Types.ObjectId(fileId);
+      return await this.folderModel.findOne({ files: fileObjectId });
+    } catch (error) {
+      this.logger.error(`Error finding folder by file: ${error.message}`);
+      throw error;
+    }
+  }
 }

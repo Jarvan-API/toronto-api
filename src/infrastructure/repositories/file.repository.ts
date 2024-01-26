@@ -33,7 +33,7 @@ export class FileRepository implements IFileRepository {
   }
 
   async addChunk(fileId: string, chunkId: string): Promise<IFile> {
-    return await this.fileModel.findOneAndUpdate({ _id: new Types.ObjectId(fileId) }, { $push: { chunks: chunkId } }, { new: true });
+    return await this.fileModel.findOneAndUpdate({ _id: new Types.ObjectId(fileId) }, { $push: { chunks: new Types.ObjectId(chunkId) } }, { new: true });
   }
 
   async findAllByIds(ids: Types.ObjectId[], populateChunks: boolean): Promise<IFile[]> {
