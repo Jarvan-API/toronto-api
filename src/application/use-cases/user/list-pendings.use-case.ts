@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
+
 import { EUserStatus, PORT } from "src/application/enums";
 import { IPendingUser } from "src/application/presentations";
 import { IUserRepository } from "src/domain/interfaces";

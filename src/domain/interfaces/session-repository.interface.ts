@@ -1,4 +1,5 @@
 import { FilterQuery } from "mongoose";
+
 import { ISession } from "../entities/session.entity";
 
 export interface ISessionRepository {

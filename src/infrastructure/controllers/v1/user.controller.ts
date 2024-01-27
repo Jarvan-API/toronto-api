@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Put, Request, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Put, Request, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
@@ -27,7 +27,7 @@ export class UserControllerV1 {
     private readonly changeProfilePictureUseCase: ChangeProfilePicture,
   ) {}
 
-  @Get("/")
+  @Get("/me")
   @HttpCode(HttpStatus.FOUND)
   @UseGuards(LowAuthenticatedGuard)
   @ApiOperation({ summary: "Search for current logged user's information" })
@@ -70,6 +70,28 @@ export class UserControllerV1 {
     return { message: "Onboarding made", status: HttpStatus.OK };
   }
 
+  @Put("/change-picture")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthenticatedGuard)
+  @ApiOperation({ summary: "Changes profile picture from user" })
+  @ApiOkResponse({
+    description: "Ok request",
+    type: ProfilePictureChange,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  @UseInterceptors(FileInterceptor("file"))
+  async changePicture(@UploadedFile() file: Express.Multer.File, @Request() req): Promise<ProfilePictureChange> {
+    const userId = req.user._doc._id;
+
+    const picture = await this.changeProfilePictureUseCase.exec(file, userId);
+
+    return { message: "Profile picture changed successfully", path: picture.path, status: HttpStatus.OK };
+  }
+
+  /* Administrator endpoints */
   @Get("/pending-users")
   @HttpCode(HttpStatus.FOUND)
   @UseGuards(AuthenticatedAdminGuard)
@@ -139,27 +161,6 @@ export class UserControllerV1 {
     await this.changeUserStatusUseCase.exec(EUserStatus.BLOCKED, adminId, userId, this.rejectPendingUser.name, data.action_reason, EUserStatus.PENDING_ONBOARDING);
 
     return { message: "Pending user rejected successfully", status: HttpStatus.OK };
-  }
-
-  @Put("/change-picture")
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthenticatedGuard)
-  @ApiOperation({ summary: "Changes profile picture from user" })
-  @ApiOkResponse({
-    description: "Ok request",
-    type: ProfilePictureChange,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
-  @UseInterceptors(FileInterceptor("file"))
-  async changePicture(@UploadedFile() file: Express.Multer.File, @Request() req): Promise<ProfilePictureChange> {
-    const userId = req.user._doc._id;
-
-    const picture = await this.changeProfilePictureUseCase.exec(file, userId);
-
-    return { message: "Profile picture changed successfully", path: picture.path, status: HttpStatus.OK };
   }
 
   @Put("block/:userId")

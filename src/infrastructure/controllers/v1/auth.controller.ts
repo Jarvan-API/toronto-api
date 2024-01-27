@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
 
@@ -6,7 +6,7 @@ import { SignInDTO, SignUpDTO } from "src/application/dtos";
 import { DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
 import { UserCreated, UserLoggedIn } from "src/application/presentations";
 import { UserSignIn, UserSignUp } from "src/application/use-cases";
-import { AuthenticatedGuard, LocalAuthGuard, LowAuthenticatedGuard } from "src/infrastructure/config";
+import { LocalAuthGuard, LowAuthenticatedGuard } from "src/infrastructure/config";
 
 @Controller({
   path: "auth",
@@ -85,5 +85,22 @@ export class AuthControllerV1 {
   })
   async check(): Promise<DefaultApiResponse> {
     return { message: "User is logged", status: HttpStatus.OK };
+  }
+
+  @Delete("sign-out")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LowAuthenticatedGuard)
+  @ApiOperation({ summary: "Sign outs user" })
+  @ApiOkResponse({
+    description: "Ok request",
+    type: DefaultApiResponse,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  async signout(@Request() req): Promise<DefaultApiResponse> {
+    req.session.destroy();
+    return { message: "User signout successfully", status: HttpStatus.OK };
   }
 }
