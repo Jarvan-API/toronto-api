@@ -5,23 +5,44 @@ import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
 import { Folder, IFolder } from "src/domain/entities";
 import { IFolderRepository } from "src/domain/interfaces";
 import { Entity } from "src/application/enums";
+import { EncryptionService } from "src/application/services";
 
 @Injectable()
 export class FolderRepository implements IFolderRepository {
   private readonly logger = new Logger(FolderRepository.name);
 
-  constructor(@InjectModel(Entity.Folder) private readonly folderModel: Model<Folder>) {}
+  constructor(
+    @InjectModel(Entity.Folder) private readonly folderModel: Model<Folder>,
+    private readonly encryptionService: EncryptionService,
+  ) {}
 
   async create(folder: IFolder): Promise<IFolder> {
+    folder.name = this.encryptionService.encrypt(folder.name);
+    folder.storagePath = this.encryptionService.encrypt(folder.storagePath);
+
     return await this.folderModel.create(folder);
   }
 
   async findAll(filter?: FilterQuery<IFolder>): Promise<IFolder[]> {
-    return this.folderModel.find(filter).populate({ path: "owner", select: "-password" }).exec();
+    const folders = await this.folderModel.find(filter).populate({ path: "owner", select: "-password" }).exec();
+
+    folders.forEach(folder => {
+      folder.name = this.encryptionService.decrypt(folder.name);
+      folder.storagePath = this.encryptionService.decrypt(folder.storagePath);
+    });
+
+    return folders;
   }
 
   async findOne(filter: FilterQuery<IFolder>): Promise<IFolder> {
-    return await this.folderModel.findOne(filter);
+    const folder = await this.folderModel.findOne(filter);
+
+    if (Boolean(folder)) {
+      folder.name = this.encryptionService.decrypt(folder.name);
+      folder.storagePath = this.encryptionService.decrypt(folder.storagePath);
+    }
+
+    return folder;
   }
 
   async update(_id: string, data: UpdateQuery<IFolder>): Promise<any> {

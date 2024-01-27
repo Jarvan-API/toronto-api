@@ -44,7 +44,7 @@ export class FileControllerV1 {
     @Request() req,
   ): Promise<DefaultApiResponse> {
     const userId = "65ab1358b682f2ddda892c13";
-    console.log(body);
+
     await this.uploadChunkUseCase.exec(body, file, fileId, folderId, userId);
 
     return { message: "Chunk uploaded successfully", status: HttpStatus.OK };
