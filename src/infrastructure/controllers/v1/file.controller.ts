@@ -5,8 +5,9 @@ import { FileInterceptor } from "@nestjs/platform-express";
 
 import { AuthenticatedGuard } from "src/infrastructure/config";
 import { DefaultApiResponse, InitializeFileDTO, UploadChunkDTO } from "src/application/dtos";
-import { DownloadFile, InitializeFile, UploadChunk } from "src/application/use-cases";
-import { FileInitialized } from "src/application/presentations";
+import { DownloadFile, GetFile, InitializeFile, UploadChunk } from "src/application/use-cases";
+import { FileInitialized, FilePresentation } from "src/application/presentations";
+import { IFile } from "src/domain/entities";
 
 @Controller({
   path: "file",
@@ -21,6 +22,7 @@ export class FileControllerV1 {
     private readonly initializeFileUseCase: InitializeFile,
     private readonly uploadChunkUseCase: UploadChunk,
     private readonly downloadFileUseCase: DownloadFile,
+    private readonly getFileUseCase: GetFile,
   ) {}
 
   @Post(":folderId/initialize")
@@ -52,5 +54,21 @@ export class FileControllerV1 {
   async downloadFile(@Param("fileId") fileId: string, @Request() req, @Response() res): Promise<any> {
     const userId = "65ab1358b682f2ddda892c13";
     await this.downloadFileUseCase.exec(fileId, userId, res);
+  }
+
+  @Get(":fileId")
+  async getFile(@Param("fileId") fileId: string, @Request() req): Promise<FilePresentation> {
+    const userId: string = req.user._doc._id;
+
+    const file = await this.getFileUseCase.exec(fileId, userId);
+
+    return {
+      message: "File found successfully",
+      file: {
+        metadata: file.metadata,
+        status: file.status,
+      },
+      status: HttpStatus.FOUND,
+    };
   }
 }

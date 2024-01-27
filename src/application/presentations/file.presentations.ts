@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 import { SearchDefaultApiResponse } from "./common.presentations";
+import { EFileStatus, IFileMetadata } from "src/domain/entities";
 
 import { DefaultApiResponse } from "../dtos";
 
@@ -65,4 +66,17 @@ export class FileInitialized extends DefaultApiResponse {
     type: IFileInitialized,
   })
   data: IFileInitialized;
+}
+
+export class IFilePresentation {
+  metadata: IFileMetadata;
+  status: EFileStatus;
+}
+
+export class FilePresentation extends DefaultApiResponse {
+  @ApiProperty({
+    description: "File",
+    type: IFilePresentation,
+  })
+  file: IFilePresentation;
 }

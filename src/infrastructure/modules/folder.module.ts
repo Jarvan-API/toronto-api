@@ -4,6 +4,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Entity, PORT } from "src/application/enums";
 import { CreateFolder, DeleteFolder, GetAuthSession, GetFolder, MoveFiles, SearchFolders, UpdateFolder } from "src/application/use-cases";
 import { FileChunkSchema, FileSchema, FolderSchema, SessionSchema } from "src/domain/entities";
+import { EncryptionService } from "src/application/services";
 
 import { FileChunkRepository, FileRepository, FolderRepository, SessionRepository, StorageRepository } from "../repositories";
 import { FolderControllerV1 } from "../controllers";
@@ -26,6 +27,7 @@ import { FolderControllerV1 } from "../controllers";
     DeleteFolder,
     MoveFiles,
     GetAuthSession,
+    EncryptionService,
     {
       provide: PORT.Folder,
       useClass: FolderRepository,

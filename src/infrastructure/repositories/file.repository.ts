@@ -5,14 +5,20 @@ import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
 import { File, IFile } from "src/domain/entities";
 import { IFileRepository } from "src/domain/interfaces";
 import { Entity } from "src/application/enums";
+import { EncryptionService } from "src/application/services";
 
 @Injectable()
 export class FileRepository implements IFileRepository {
   private readonly logger = new Logger(FileRepository.name);
 
-  constructor(@InjectModel(Entity.File) private readonly fileModel: Model<File>) {}
+  constructor(
+    @InjectModel(Entity.File) private readonly fileModel: Model<File>,
+    private readonly encryptionService: EncryptionService,
+  ) {}
 
   async create(file: IFile): Promise<IFile> {
+    file.metadata.originalName = this.encryptionService.encrypt(file.metadata.originalName);
+    file.metadata.type = this.encryptionService.encrypt(file.metadata.type);
     return await this.fileModel.create(file);
   }
 
@@ -21,7 +27,14 @@ export class FileRepository implements IFileRepository {
   }
 
   async findOne(filter: FilterQuery<IFile>): Promise<IFile> {
-    return await this.fileModel.findOne(filter);
+    const file: IFile = await this.fileModel.findOne(filter);
+
+    if (Boolean(file)) {
+      file.metadata.originalName = this.encryptionService.decrypt(file.metadata.originalName);
+      file.metadata.type = this.encryptionService.decrypt(file.metadata.type);
+    }
+
+    return file;
   }
 
   async update(_id: string, data: UpdateQuery<IFile>): Promise<any> {

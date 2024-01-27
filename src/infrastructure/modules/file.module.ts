@@ -4,7 +4,8 @@ import { ConfigService } from "@nestjs/config";
 
 import { Entity, PORT } from "src/application/enums";
 import { FileChunkSchema, FileSchema, FolderSchema, SessionSchema } from "src/domain/entities";
-import { DownloadFile, GetAuthSession, InitializeFile, UploadChunk } from "src/application/use-cases";
+import { DownloadFile, GetAuthSession, GetFile, InitializeFile, UploadChunk } from "src/application/use-cases";
+import { EncryptionService } from "src/application/services";
 
 import { FileChunkRepository, FileRepository, FolderRepository, SessionRepository, StorageRepository } from "../repositories";
 import { FileControllerV1 } from "../controllers";
@@ -23,8 +24,10 @@ import { FileControllerV1 } from "../controllers";
     InitializeFile,
     UploadChunk,
     DownloadFile,
+    GetFile,
     ConfigService,
     GetAuthSession,
+    EncryptionService,
     {
       provide: PORT.File,
       useClass: FileRepository,
