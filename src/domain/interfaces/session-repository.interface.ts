@@ -1,6 +1,6 @@
 import { FilterQuery } from "mongoose";
 
-import { ISession } from "../entities/session.entity";
+import { ISession } from "../entities";
 
 export interface ISessionRepository {
   create: (user: ISession) => Promise<ISession>;

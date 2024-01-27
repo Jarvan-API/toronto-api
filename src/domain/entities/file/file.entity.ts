@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 
-import { FileChunkSchema, IFileChunk } from "./chunk.entity";
 import { FileMetadataSchema, IFileMetadata } from "./file-metadata.entity";
 
 export enum EFileStatus {

@@ -8,21 +8,6 @@ services:
     ports:
       - "27017:27017"
 
-  cassandra:
-    image: cassandra
-    restart: always
-    container_name: cassandra-toronto-dev
-    volumes:
-      - cassandra-data:/var/lib/cassandra
-      - ./init-db.cql:/init-db.cql
-    ports:
-      - "9042:9042"
-    environment:
-      - CASSANDRA_CLUSTER_NAME=${CASSANDRA_CLUSTER_NAME}
-      - CASSANDRA_DC=${CASSANDRA_DC}
-      - CASSANDRA_RACK=${CASSANDRA_RACK}
-      - CASSANDRA_ENDPOINT_SNITCH=${CASSANDRA_ENDPOINT_SNITCH}
-
 networks:
   my-network:
 
