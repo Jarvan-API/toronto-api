@@ -1,9 +1,10 @@
 import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
 import { Injectable, Logger } from "@nestjs/common";
 
-import { ICreateDocument, IEncryptionOptions } from "src/application/types";
+import { ICreateDocument } from "src/application/types";
 import { IRepository } from "src/domain/interfaces";
 import { EncryptionService } from "src/application/services";
+import { ENCRYPTABLE_KEY } from "src/domain/decorators";
 
 @Injectable()
 export abstract class Repository<T> implements IRepository<T> {
@@ -17,10 +18,7 @@ export abstract class Repository<T> implements IRepository<T> {
   }
 
   async create(data: ICreateDocument<T>): Promise<T> {
-    if (Boolean(data.options?.encryption) && this.encryptionService) {
-      this.encryptFields(data.value, data.options.encryption);
-    }
-
+    // encriptar
     return await this.model.create(data.value || data);
   }
 
@@ -38,25 +36,5 @@ export abstract class Repository<T> implements IRepository<T> {
 
   async delete(_id: string): Promise<any> {
     return await this.model.deleteOne({ _id });
-  }
-
-  private encryptFields(obj: any, encryptionOptions: IEncryptionOptions) {
-    if (!obj || typeof obj !== "object") {
-      return;
-    }
-
-    Object.keys(obj).forEach(key => {
-      const value = obj[key];
-
-      // If the value is an object, recurse into it
-      if (typeof value === "object") {
-        this.encryptFields(value, encryptionOptions);
-      } else {
-        // Check if the field should be encrypted
-        if (encryptionOptions.includeFields?.includes(key)) {
-          obj[key] = this.encryptionService.encrypt(value);
-        }
-      }
-    });
   }
 }

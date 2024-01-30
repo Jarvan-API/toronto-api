@@ -43,7 +43,6 @@ export class InitializeFile {
       options: {
         encryption: {
           encryptKey: data.encryptionKey,
-          includeFields: ["originalName", "type"],
         },
       },
     });

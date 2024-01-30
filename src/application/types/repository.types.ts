@@ -1,5 +1,3 @@
-import { EncryptionService } from "../services";
-
 export interface ICreateDocument<T> {
   value: T;
   options?: ICreateDocumentOptions;

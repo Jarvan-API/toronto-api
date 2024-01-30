@@ -2,6 +2,7 @@ import session from "express-session";
 import passport from "passport";
 import MongoStore from "connect-mongo";
 import helmet from "helmet";
+import "reflect-metadata";
 import { ConfigService } from "@nestjs/config";
 import { HttpAdapterHost, NestFactory } from "@nestjs/core";
 import { Logger, ValidationPipe, VersioningType } from "@nestjs/common";
