@@ -2,11 +2,11 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
-import { CreateFolder, DeleteFolder, GetAuthSession, GetFolder, MoveFiles, SearchFolders, UpdateFolder } from "src/application/use-cases";
-import { FileChunkSchema, FileSchema, FolderSchema, SessionSchema } from "src/domain/entities";
+import { CreateFolder, DeleteFolder, GetAuthSession, GetFolder, MoveFiles, SaveUserLog, SearchFolders, UpdateFolder } from "src/application/use-cases";
+import { FileChunkSchema, FileSchema, FolderSchema, SessionSchema, UserLogScheme } from "src/domain/entities";
 import { EncryptionService } from "src/application/services";
 
-import { FileChunkRepository, FileRepository, FolderRepository, SessionRepository, StorageRepository } from "../repositories";
+import { FileChunkRepository, FileRepository, FolderRepository, SessionRepository, StorageRepository, UserLogRepository } from "../repositories";
 import { FolderControllerV1 } from "../controllers";
 
 @Module({
@@ -16,6 +16,7 @@ import { FolderControllerV1 } from "../controllers";
       { name: Entity.File, schema: FileSchema },
       { name: Entity.FileChunk, schema: FileChunkSchema },
       { name: Entity.Session, schema: SessionSchema },
+      { name: Entity.UserLog, schema: UserLogScheme },
     ]),
   ],
   controllers: [FolderControllerV1],
@@ -28,6 +29,11 @@ import { FolderControllerV1 } from "../controllers";
     MoveFiles,
     GetAuthSession,
     EncryptionService,
+    SaveUserLog,
+    {
+      provide: PORT.UserLog,
+      useClass: UserLogRepository,
+    },
     {
       provide: PORT.Folder,
       useClass: FolderRepository,

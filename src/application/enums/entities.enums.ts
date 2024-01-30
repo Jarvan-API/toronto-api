@@ -6,4 +6,5 @@ export enum Entity {
   File = "File",
   FileChunk = "FileChunk",
   AdminLog = "AdminLog",
+  UserLog = "UserLog",
 }

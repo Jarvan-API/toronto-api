@@ -1,6 +1,7 @@
 import { ThrottlerModule } from "@nestjs/throttler";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 
 import { AppController } from "./infrastructure/controllers";
 import { BcryptModule, MongoDBModule, SentryModule } from "./infrastructure/config";
@@ -20,6 +21,7 @@ import { SentryMiddleware } from "./infrastructure/middlewares";
         },
       ],
     }),
+    EventEmitterModule.forRoot(),
     MongoDBModule,
     BcryptModule,
     AuthModule,
