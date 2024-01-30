@@ -5,7 +5,7 @@ import { EventEmitterModule } from "@nestjs/event-emitter";
 
 import { AppController } from "./infrastructure/controllers";
 import { BcryptModule, MongoDBModule, SentryModule } from "./infrastructure/config";
-import { AuthModule, ChatModule, FileModule, FolderModule, UserModule } from "./infrastructure/modules";
+import { AuthModule, FileModule, FolderModule, UserModule } from "./infrastructure/modules";
 import { SentryMiddleware } from "./infrastructure/middlewares";
 
 @Module({
@@ -27,7 +27,6 @@ import { SentryMiddleware } from "./infrastructure/middlewares";
     AuthModule,
     FolderModule,
     FileModule,
-    ChatModule,
     UserModule,
     SentryModule,
   ],
