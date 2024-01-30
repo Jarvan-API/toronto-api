@@ -1,36 +1,20 @@
 import { InjectModel } from "@nestjs/mongoose";
-import { Injectable } from "@nestjs/common";
-import { FilterQuery, Model, Types } from "mongoose";
+import { Inject, Injectable } from "@nestjs/common";
+import { Model, Types } from "mongoose";
 
 import { File, IFile } from "src/domain/entities";
-import { IFileRepository, Repository } from "src/domain/interfaces";
+import { IFileRepository } from "src/domain/interfaces";
 import { Entity } from "src/application/enums";
 import { EncryptionService } from "src/application/services";
+import { Repository } from "./repository";
 
 @Injectable()
 export class FileRepository extends Repository<IFile> implements IFileRepository {
   constructor(
     @InjectModel(Entity.File) private readonly fileModel: Model<File>,
-    private readonly encryptionService: EncryptionService,
+    protected readonly encryptionService: EncryptionService,
   ) {
-    super(fileModel);
-  }
-
-  override async create(file: IFile): Promise<IFile> {
-    file.metadata.originalName = this.encryptionService.encrypt(file.metadata.originalName);
-    file.metadata.type = this.encryptionService.encrypt(file.metadata.type);
-    return await this.fileModel.create(file);
-  }
-
-  override async findOne(filter: FilterQuery<IFile>): Promise<IFile> {
-    const file: IFile = await this.fileModel.findOne(filter);
-
-    if (Boolean(file)) {
-      file.metadata.originalName = this.encryptionService.decrypt(file.metadata.originalName);
-      file.metadata.type = this.encryptionService.decrypt(file.metadata.type);
-    }
-
-    return file;
+    super(fileModel, encryptionService);
   }
 
   async addChunk(fileId: string, chunkId: string): Promise<IFile> {

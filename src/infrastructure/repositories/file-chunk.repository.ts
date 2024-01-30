@@ -4,24 +4,16 @@ import { FilterQuery, Model } from "mongoose";
 
 import { FileChunk, IFileChunk } from "src/domain/entities";
 import { Entity } from "src/application/enums";
-import { IFileChunkRepository, Repository } from "src/domain/interfaces";
-import { EncryptionService } from "src/application/services";
+import { IFileChunkRepository } from "src/domain/interfaces";
+import { Repository } from "./repository";
 
 @Injectable()
 export class FileChunkRepository extends Repository<IFileChunk> implements IFileChunkRepository {
-  constructor(
-    @InjectModel(Entity.FileChunk) private readonly fileChunkModel: Model<FileChunk>,
-    private readonly encryptionService: EncryptionService,
-  ) {
+  constructor(@InjectModel(Entity.FileChunk) private readonly fileChunkModel: Model<FileChunk>) {
     super(fileChunkModel);
   }
 
-  override async create(fileChunk: IFileChunk): Promise<IFileChunk> {
-    fileChunk.storagePath = this.encryptionService.encrypt(fileChunk.storagePath);
-
-    return await this.fileChunkModel.create(fileChunk);
-  }
-
+  /*
   override async findOne(filter: FilterQuery<IFileChunk>): Promise<IFileChunk> {
     const fileChunk = await this.fileChunkModel.findOne(filter);
 
@@ -31,4 +23,5 @@ export class FileChunkRepository extends Repository<IFileChunk> implements IFile
 
     return fileChunk;
   }
+  */
 }

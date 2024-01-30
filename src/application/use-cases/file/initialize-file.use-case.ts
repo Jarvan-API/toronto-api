@@ -1,7 +1,8 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { Types } from "mongoose";
 
-import { InitializeFileDTO, SearchFileDTO } from "src/application/dtos";
+import { InitializeFileDTO } from "src/application/dtos";
 import { PORT } from "src/application/enums";
 import { FolderNotFound, UserNotAllowed } from "src/application/exceptions";
 import { EFileStatus, IFile, IFileMetadata } from "src/domain/entities";
@@ -37,7 +38,15 @@ export class InitializeFile {
     };
 
     // store file
-    const result = await this.fileRepository.create(file);
+    const result = await this.fileRepository.create({
+      value: file,
+      options: {
+        encryption: {
+          encryptKey: data.encryptionKey,
+          includeFields: ["originalName", "type"],
+        },
+      },
+    });
 
     // store file on folder
     await this.folderRepository.addFile(folder._id.toString(), result._id.toString());

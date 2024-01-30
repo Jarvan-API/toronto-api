@@ -1,9 +1,10 @@
 import { FilterQuery, Types, UpdateQuery } from "mongoose";
 
+import { ICreateDocument } from "src/application/types";
 import { IFile } from "src/domain/entities";
 
 export interface IFileRepository {
-  create: (file: IFile) => Promise<IFile>;
+  create: (data: ICreateDocument<IFile> | IFile) => Promise<IFile>;
   findAll: (filter?: FilterQuery<IFile>) => Promise<IFile[]>;
   findOne: (filters: FilterQuery<IFile>) => Promise<IFile>;
   update: (_id: string, data: UpdateQuery<IFile>) => Promise<any>;

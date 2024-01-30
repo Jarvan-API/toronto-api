@@ -1,9 +1,10 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
 
+import { ICreateDocument } from "src/application/types";
 import { IFolder } from "src/domain/entities";
 
 export interface IFolderRepository {
-  create: (user: IFolder) => Promise<IFolder>;
+  create: (data: ICreateDocument<IFolder> | IFolder) => Promise<IFolder>;
   findAll: (filter?: FilterQuery<IFolder>) => Promise<IFolder[]>;
   findOne: (filters: FilterQuery<IFolder>) => Promise<IFolder>;
   update: (_id: string, data: UpdateQuery<IFolder>) => Promise<any>;

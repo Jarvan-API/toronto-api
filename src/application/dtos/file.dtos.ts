@@ -1,6 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, Matches } from "class-validator";
 
+import { EncryptableAction } from "./common.dtos";
+
 export class UploadFileDTO {
   @ApiProperty({ description: "File name", type: String, example: "photo.jpg" })
   @IsNotEmpty()
@@ -28,7 +30,7 @@ export class SearchFileDTO {
   ownerId: string;
 }
 
-export class InitializeFileDTO {
+export class InitializeFileDTO extends EncryptableAction {
   @ApiProperty({ description: "File name", type: String, example: "photo.jpg" })
   @IsNotEmpty()
   @IsString()

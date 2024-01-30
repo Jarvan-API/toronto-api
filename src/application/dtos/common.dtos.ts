@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class ExceptionDTO {
   @ApiProperty({
@@ -55,4 +55,15 @@ export class DefaultAdminActionApiRequest {
   })
   @IsString()
   action_reason: string;
+}
+
+export class EncryptableAction {
+  @ApiProperty({
+    description: "Encryption key",
+    type: String,
+    example: "a3d24f44369f10b68908a1f2b2c4e5f6a7b8c9d0e1f21324566789a0b1c2d3e2",
+  })
+  @IsString()
+  @IsOptional()
+  encryptionKey;
 }
