@@ -20,7 +20,7 @@ export class ChangeUserStatus {
     const user = await this.userRepository.findOne({ _id: new Types.ObjectId(userId) });
 
     if (!Boolean(user)) throw new UserNotFound();
-    if (user.role === EUserRole.SUDO) throw new UserNotAllowed();
+    if (user.role === EUserRole.SUDO && user._id.toString() !== adminId) throw new UserNotAllowed();
     if (Boolean(expectedStatus) && user.status !== expectedStatus) throw new TargetDidNotMetRequirements();
 
     await this.userRepository.update(userId, { status });

@@ -1,28 +1,28 @@
 import { InjectModel } from "@nestjs/mongoose";
-import { Injectable, Logger } from "@nestjs/common";
-import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
+import { Injectable } from "@nestjs/common";
+import { FilterQuery, Model } from "mongoose";
 
 import { FileChunk, IFileChunk } from "src/domain/entities";
 import { Entity } from "src/application/enums";
-import { IFileChunkRepository } from "src/domain/interfaces";
+import { IFileChunkRepository, Repository } from "src/domain/interfaces";
 import { EncryptionService } from "src/application/services";
 
 @Injectable()
-export class FileChunkRepository implements IFileChunkRepository {
-  private readonly logger = new Logger(FileChunkRepository.name);
-
+export class FileChunkRepository extends Repository<IFileChunk> implements IFileChunkRepository {
   constructor(
     @InjectModel(Entity.FileChunk) private readonly fileChunkModel: Model<FileChunk>,
     private readonly encryptionService: EncryptionService,
-  ) {}
+  ) {
+    super(fileChunkModel);
+  }
 
-  async create(fileChunk: IFileChunk): Promise<IFileChunk> {
+  override async create(fileChunk: IFileChunk): Promise<IFileChunk> {
     fileChunk.storagePath = this.encryptionService.encrypt(fileChunk.storagePath);
 
     return await this.fileChunkModel.create(fileChunk);
   }
 
-  async findOne(filter: FilterQuery<IFileChunk>): Promise<IFileChunk> {
+  override async findOne(filter: FilterQuery<IFileChunk>): Promise<IFileChunk> {
     const fileChunk = await this.fileChunkModel.findOne(filter);
 
     if (Boolean(fileChunk)) {
@@ -30,13 +30,5 @@ export class FileChunkRepository implements IFileChunkRepository {
     }
 
     return fileChunk;
-  }
-
-  async update(_id: string, data: UpdateQuery<IFileChunk>): Promise<any> {
-    return await this.fileChunkModel.findOneAndUpdate({ _id: new Types.ObjectId(_id) }, data);
-  }
-
-  async delete(_id: string): Promise<any> {
-    return await this.fileChunkModel.deleteOne({ _id: new Types.ObjectId(_id) });
   }
 }

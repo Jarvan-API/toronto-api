@@ -3,27 +3,27 @@ import { Injectable, Logger } from "@nestjs/common";
 import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
 
 import { Folder, IFolder } from "src/domain/entities";
-import { IFolderRepository } from "src/domain/interfaces";
+import { IFolderRepository, Repository } from "src/domain/interfaces";
 import { Entity } from "src/application/enums";
 import { EncryptionService } from "src/application/services";
 
 @Injectable()
-export class FolderRepository implements IFolderRepository {
-  private readonly logger = new Logger(FolderRepository.name);
-
+export class FolderRepository extends Repository<IFolder> implements IFolderRepository {
   constructor(
     @InjectModel(Entity.Folder) private readonly folderModel: Model<Folder>,
     private readonly encryptionService: EncryptionService,
-  ) {}
+  ) {
+    super(folderModel);
+  }
 
-  async create(folder: IFolder): Promise<IFolder> {
+  override async create(folder: IFolder): Promise<IFolder> {
     folder.name = this.encryptionService.encrypt(folder.name);
     folder.storagePath = this.encryptionService.encrypt(folder.storagePath);
 
     return await this.folderModel.create(folder);
   }
 
-  async findAll(filter?: FilterQuery<IFolder>): Promise<IFolder[]> {
+  override async findAll(filter?: FilterQuery<IFolder>): Promise<IFolder[]> {
     const folders = await this.folderModel.find(filter).populate({ path: "owner", select: "-password" }).exec();
 
     folders.forEach(folder => {
@@ -34,7 +34,7 @@ export class FolderRepository implements IFolderRepository {
     return folders;
   }
 
-  async findOne(filter: FilterQuery<IFolder>): Promise<IFolder> {
+  override async findOne(filter: FilterQuery<IFolder>): Promise<IFolder> {
     const folder = await this.folderModel.findOne(filter);
 
     if (Boolean(folder)) {
@@ -43,14 +43,6 @@ export class FolderRepository implements IFolderRepository {
     }
 
     return folder;
-  }
-
-  async update(_id: string, data: UpdateQuery<IFolder>): Promise<any> {
-    return await this.folderModel.findOneAndUpdate({ _id: new Types.ObjectId(_id) }, data);
-  }
-
-  async delete(_id: string): Promise<any> {
-    return await this.folderModel.deleteOne({ _id: new Types.ObjectId(_id) });
   }
 
   async addFile(folderId: string, fileId: string): Promise<IFolder> {

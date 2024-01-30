@@ -129,7 +129,7 @@ export class UserControllerV1 {
   })
   async acceptPendingUser(@Param("userId") userId: string, @Request() req): Promise<DefaultApiResponse> {
     const adminId = req.user._doc._id;
-    await this.changeUserStatusUseCase.exec(EUserStatus.ACTIVE, adminId, userId, this.acceptPendingUser.name, "", EUserStatus.PENDING_ONBOARDING);
+    await this.changeUserStatusUseCase.exec(EUserStatus.ACTIVE, adminId, userId, this.acceptPendingUser.name, "", EUserStatus.PENDING);
 
     return { message: "Pending user accepted successfully", status: HttpStatus.OK };
   }

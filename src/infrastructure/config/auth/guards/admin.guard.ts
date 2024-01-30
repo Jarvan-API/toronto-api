@@ -19,7 +19,7 @@ export class AuthenticatedAdminGuard implements CanActivate {
 
     if (!session) throw new SessionNotFound();
 
-    if (request.user._doc.role !== EUserRole.SUDO || request.user._doc.status !== EUserStatus.ACTIVE) throw new UserNotAllowed();
+    if (request.user._doc.role !== EUserRole.SUDO || request.user._doc.status === EUserStatus.BLOCKED) throw new UserNotAllowed();
 
     return true;
   }
