@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 
 import { FileMetadataSchema, IFileMetadata } from "./file-metadata.entity";
-import { Encryptable } from "src/domain/decorators";
 
 export enum EFileStatus {
   PENDING = "pending",

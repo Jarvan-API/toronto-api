@@ -14,9 +14,11 @@ export class EncryptionService {
     this.secretKey = Buffer.from(configService.get<string>("ENCRYPTION_KEY"), "hex");
   }
 
-  encrypt(value: string): string {
+  encrypt(value: string, key?: string): string {
+    const secretKey = Boolean(key) ? Buffer.from(key, "hex") : this.secretKey;
+
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv(this.algorithm, this.secretKey, iv);
+    const cipher = crypto.createCipheriv(this.algorithm, secretKey, iv);
     const encrypted = Buffer.concat([cipher.update(value), cipher.final()]);
     return `${iv.toString("hex")}:${encrypted.toString("hex")}`;
   }

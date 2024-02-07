@@ -9,6 +9,7 @@ import { IFolder, IUserLog } from "src/domain/entities";
 import { IFolderRepository } from "src/domain/interfaces";
 import { FolderPath } from "src/infrastructure/utils";
 import { EUserAction } from "src/application/types";
+import { EncryptionService } from "src/application/services";
 
 @Injectable()
 export class CreateFolder {
@@ -18,6 +19,7 @@ export class CreateFolder {
     @Inject(PORT.Folder) private readonly folderRepository: IFolderRepository,
     private readonly configService: ConfigService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly encryptionService: EncryptionService,
   ) {}
 
   async exec(data: CreateFolderDTO, userId: string): Promise<IFolder> {
@@ -32,7 +34,7 @@ export class CreateFolder {
       storagePath: path.storagePath,
     };
 
-    const folder = await this.folderRepository.create(folderData);
+    const folder = await this.folderRepository.create({ value: folderData });
 
     const log: IUserLog = {
       user: new Types.ObjectId(userId),

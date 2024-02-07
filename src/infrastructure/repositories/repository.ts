@@ -18,8 +18,10 @@ export abstract class Repository<T> implements IRepository<T> {
   }
 
   async create(data: ICreateDocument<T>): Promise<T> {
-    // encriptar
-    return await this.model.create(data.value || data);
+    if (this.encryptionService) {
+      this._encryptObjectFields(data.value);
+    }
+    return await this.model.create(data.value);
   }
 
   async findAll(filter?: FilterQuery<T>): Promise<T[]> {
@@ -36,5 +38,17 @@ export abstract class Repository<T> implements IRepository<T> {
 
   async delete(_id: string): Promise<any> {
     return await this.model.deleteOne({ _id });
+  }
+
+  private _encryptObjectFields(obj: any, key?: string): void {
+    Object.keys(obj).forEach(field => {
+      const isEncryptable = Reflect.getMetadata(ENCRYPTABLE_KEY, obj, field);
+      console.log(isEncryptable);
+      if (isEncryptable) {
+        obj[field] = this.encryptionService.encrypt(obj[field], key);
+      } else if (typeof obj[field] === "object" && obj[field] !== null) {
+        this._encryptObjectFields(obj[field], key);
+      }
+    });
   }
 }

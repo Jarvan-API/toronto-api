@@ -40,11 +40,7 @@ export class InitializeFile {
     // store file
     const result = await this.fileRepository.create({
       value: file,
-      options: {
-        encryption: {
-          encryptKey: data.encryptionKey,
-        },
-      },
+      options: {},
     });
 
     // store file on folder
