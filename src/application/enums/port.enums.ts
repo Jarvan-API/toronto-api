@@ -7,4 +7,5 @@ export enum PORT {
   Storage = "Storage.Port",
   AdminLog = "AdminLog.Port",
   UserLog = "UserLog.Port",
+  Redis = "Redis.Port",
 }

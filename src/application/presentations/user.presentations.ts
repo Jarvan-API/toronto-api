@@ -41,3 +41,10 @@ export class ProfilePictureChange extends DefaultApiResponse {
   })
   path: string;
 }
+
+export class RequestRecoveryPresentation extends DefaultApiResponse {
+  @ApiProperty({
+    description: "Recovery token",
+  })
+  token: string;
+}

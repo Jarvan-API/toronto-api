@@ -2,11 +2,12 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
-import { ChangeUserStatus, ChangeProfilePicture, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
+import { ChangeUserStatus, ChangeProfilePicture, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding, RequestRecovery, ChangePassword } from "src/application/use-cases";
 import { AdminLogSchema, SessionSchema, UserSchema } from "src/domain/entities";
 
 import { UserControllerV1 } from "../controllers";
-import { AdminLogRepository, SessionRepository, StorageRepository, UserRepository } from "../repositories";
+import { AdminLogRepository, RedisRepository, SessionRepository, StorageRepository, UserRepository } from "../repositories";
+import { BcryptService } from "../config";
 
 @Module({
   imports: [
@@ -24,6 +25,9 @@ import { AdminLogRepository, SessionRepository, StorageRepository, UserRepositor
     Onboarding,
     GetAuthSession,
     ChangeProfilePicture,
+    RequestRecovery,
+    ChangePassword,
+    BcryptService,
     {
       provide: PORT.User,
       useClass: UserRepository,
@@ -39,6 +43,10 @@ import { AdminLogRepository, SessionRepository, StorageRepository, UserRepositor
     {
       provide: PORT.AdminLog,
       useClass: AdminLogRepository,
+    },
+    {
+      provide: PORT.Redis,
+      useClass: RedisRepository,
     },
   ],
   exports: [],

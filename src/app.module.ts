@@ -4,7 +4,7 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 
 import { AppController } from "./infrastructure/controllers";
-import { BcryptModule, MongoDBModule, SentryModule } from "./infrastructure/config";
+import { BcryptModule, MongoDBModule, RedisModule, SentryModule } from "./infrastructure/config";
 import { AuthModule, FileModule, FolderModule, UserModule } from "./infrastructure/modules";
 import { SentryMiddleware } from "./infrastructure/middlewares";
 
@@ -23,6 +23,7 @@ import { SentryMiddleware } from "./infrastructure/middlewares";
     }),
     EventEmitterModule.forRoot(),
     MongoDBModule,
+    RedisModule,
     BcryptModule,
     AuthModule,
     FolderModule,

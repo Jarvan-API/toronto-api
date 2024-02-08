@@ -4,7 +4,6 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ICreateDocument } from "src/application/types";
 import { IRepository } from "src/domain/interfaces";
 import { EncryptionService } from "src/application/services";
-import { ENCRYPTABLE_KEY } from "src/domain/decorators";
 
 @Injectable()
 export abstract class Repository<T> implements IRepository<T> {

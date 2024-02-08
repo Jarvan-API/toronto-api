@@ -1,13 +1,13 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Put, Request, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Post, Put, Request, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
 
-import { OnboardingDTO } from "src/application/dtos";
+import { ChangePasswordDTO, OnboardingDTO, RequestRecoveryDTO } from "src/application/dtos";
 import { DefaultAdminActionApiRequest, DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
 import { EUserStatus } from "src/application/enums";
-import { PendingUsers, ProfilePictureChange, UserProfile } from "src/application/presentations";
-import { ChangeProfilePicture, ChangeUserStatus, GetUserProfile, ListPendingUsers, Onboarding } from "src/application/use-cases";
+import { PendingUsers, ProfilePictureChange, RequestRecoveryPresentation, UserProfile } from "src/application/presentations";
+import { ChangePassword, ChangeProfilePicture, ChangeUserStatus, GetUserProfile, ListPendingUsers, Onboarding, RequestRecovery } from "src/application/use-cases";
 import { AuthenticatedAdminGuard, AuthenticatedGuard, LowAuthenticatedGuard } from "src/infrastructure/config";
 
 @Controller({
@@ -25,6 +25,8 @@ export class UserControllerV1 {
     private readonly listPendingUsersUseCase: ListPendingUsers,
     private readonly changeUserStatusUseCase: ChangeUserStatus,
     private readonly changeProfilePictureUseCase: ChangeProfilePicture,
+    private readonly requestRecoveryUseCase: RequestRecovery,
+    private readonly changePasswordUseCase: ChangePassword,
   ) {}
 
   @Get("/me")
@@ -129,6 +131,7 @@ export class UserControllerV1 {
   })
   async acceptPendingUser(@Param("userId") userId: string, @Request() req): Promise<DefaultApiResponse> {
     const adminId = req.user._doc._id;
+
     await this.changeUserStatusUseCase.exec(EUserStatus.ACTIVE, adminId, userId, this.acceptPendingUser.name, "", EUserStatus.PENDING);
 
     return { message: "Pending user accepted successfully", status: HttpStatus.OK };
@@ -190,5 +193,56 @@ export class UserControllerV1 {
     await this.changeUserStatusUseCase.exec(EUserStatus.BLOCKED, adminId, userId, this.blockUser.name, data.action_reason);
 
     return { message: "User blocked successfully", status: HttpStatus.OK };
+  }
+
+  @Post("request-recovery")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Creates a recovery password token" })
+  @ApiBody({
+    description: "User email",
+    type: RequestRecoveryDTO,
+  })
+  @ApiOkResponse({
+    description: "Ok request",
+    type: DefaultApiResponse,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  async requestRecovery(@Body() body: RequestRecoveryDTO): Promise<RequestRecoveryPresentation> {
+    const { email } = body;
+
+    const token = await this.requestRecoveryUseCase.exec(email);
+
+    return { message: "Recovery password request created", token, status: HttpStatus.OK };
+  }
+
+  @Put("change-password/:token")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Changes password by token" })
+  @ApiBody({
+    description: "User new password",
+    type: ChangePasswordDTO,
+  })
+  @ApiParam({
+    name: "token",
+    description: "Request token",
+    type: String,
+  })
+  @ApiOkResponse({
+    description: "Ok request",
+    type: DefaultApiResponse,
+  })
+  @ApiBadRequestResponse({
+    description: "Bad request",
+    type: ExceptionDTO,
+  })
+  async changePassword(@Body() body: ChangePasswordDTO, @Param("token") token: string): Promise<DefaultApiResponse> {
+    const { password } = body;
+
+    await this.changePasswordUseCase.exec(password, token);
+
+    return { message: "Changed password successfully", status: HttpStatus.OK };
   }
 }

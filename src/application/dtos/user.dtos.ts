@@ -32,3 +32,23 @@ export class OnboardingDTO {
   @IsString()
   dob: string;
 }
+
+export class RequestRecoveryDTO {
+  @ApiProperty({
+    description: "User email",
+    type: String,
+  })
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+}
+
+export class ChangePasswordDTO {
+  @ApiProperty({
+    description: "User new password",
+    type: String,
+  })
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+}

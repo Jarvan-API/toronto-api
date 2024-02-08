@@ -5,7 +5,7 @@ import { Types } from "mongoose";
 
 import { PORT } from "src/application/enums";
 import { FileNotFound, FolderNotFound, UserNotAllowed } from "src/application/exceptions";
-import { IFile, IFileChunk } from "src/domain/entities";
+import { IFileChunk } from "src/domain/entities";
 import { IFileChunkRepository, IFileRepository, IFolderRepository } from "src/domain/interfaces";
 import { isFolderVisibile } from "src/infrastructure/utils";
 
