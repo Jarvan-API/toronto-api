@@ -8,4 +8,5 @@ export enum PORT {
   AdminLog = "AdminLog.Port",
   UserLog = "UserLog.Port",
   Redis = "Redis.Port",
+  Marry = "Marry",
 }
