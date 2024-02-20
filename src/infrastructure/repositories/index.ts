@@ -7,3 +7,4 @@ export * from "./file-chunk.repository";
 export * from "./storage.repository";
 export * from "./repository";
 export * from "./redis.repository";
+export * from "./character.repository";

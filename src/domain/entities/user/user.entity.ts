@@ -1,8 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 import { EUserRole, EUserStatus } from "src/application/enums";
 import { IUserPictureMetadata, UserPictureMetadataSchema } from "./user-picture-metadata.entity";
+
+import { Character, ICharacter } from "../character";
 
 export interface IUser {
   _id?: string;
@@ -16,6 +18,7 @@ export interface IUser {
   pictureMetadata?: IUserPictureMetadata;
   createdAt?: Date;
   updatedAt?: Date;
+  haram?: Types.ObjectId[];
 }
 
 @Schema({ versionKey: false, timestamps: true })
@@ -64,6 +67,9 @@ export class User extends Document {
 
   @Prop({ type: UserPictureMetadataSchema })
   pictureMetadata: IUserPictureMetadata;
+
+  @Prop({ type: [{ type: Character, ref: "Characters" }], required: true })
+  harem: ICharacter[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
