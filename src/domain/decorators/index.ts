@@ -1,1 +1,1 @@
-export * from "./encryption.decorator";
+export * from "./encryptable.decorator";

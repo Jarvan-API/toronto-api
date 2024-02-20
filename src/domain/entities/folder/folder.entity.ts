@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 
-export interface IFolder {
+export class IFolder {
   _id?: string;
   name: string;
   owner: Types.ObjectId;
