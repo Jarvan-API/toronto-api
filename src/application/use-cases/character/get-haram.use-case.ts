@@ -1,7 +1,8 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 
 import { PORT } from "src/application/enums";
-import { ICharacter } from "src/domain/entities";
+import { IMarry } from "src/application/presentations/character.presentations";
+import { Character } from "src/domain/entities";
 import { IUserRepository } from "src/domain/interfaces";
 import { IMarryRepository } from "src/domain/interfaces/character-repository.interfaces";
 
@@ -14,7 +15,8 @@ export class GetHaram {
     @Inject(PORT.User) private readonly userRepository: IUserRepository,
   ) {}
 
-  async exec(userId: string): Promise<ICharacter[]> {
-    const marrys = await this.userRepository.findAll(await this.userModel.findOne(filter).populate(Character));
+  async exec(userId: string): Promise<IMarry[]> {
+    const marrys = await this.userRepository.findAll(await this.userId.findOne(filter).populate(Character));
+    return marrys;
   }
 }

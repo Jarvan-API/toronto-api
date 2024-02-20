@@ -15,5 +15,5 @@ export class GetHaramPresentation extends DefaultApiResponse {
   @ApiProperty({
     description: "The data of the marrys",
   })
-  info: IMarry;
+  info: IMarry[];
 }
