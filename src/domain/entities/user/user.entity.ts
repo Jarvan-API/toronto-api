@@ -4,8 +4,6 @@ import { Document, Types } from "mongoose";
 import { EUserRole, EUserStatus, Entity } from "src/application/enums";
 import { IUserPictureMetadata, UserPictureMetadataSchema } from "./user-picture-metadata.entity";
 
-import { Character, ICharacter } from "../character";
-
 export interface IUser {
   _id?: string;
   firstname?: string;
@@ -16,7 +14,7 @@ export interface IUser {
   role: EUserRole;
   dob?: Date;
   pictureMetadata?: IUserPictureMetadata;
-  harem: Types.ObjectId[];
+  harem: Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -68,8 +66,8 @@ export class User extends Document {
   @Prop({ type: UserPictureMetadataSchema })
   pictureMetadata: IUserPictureMetadata;
 
-  @Prop({ type: [{ type: Types.ObjectId }], ref: Entity.Character, default: [] })
-  harem: Types.ObjectId[];
+  @Prop({ type: Types.ObjectId, ref: Entity.Harem })
+  harem: Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -5,17 +5,19 @@ import { PassportModule } from "@nestjs/passport";
 
 import { Entity, PORT } from "src/application/enums";
 import { GetAuthSession, UserSignIn, UserSignUp, VerifySignUp } from "src/application/use-cases";
-import { SessionSchema, UserSchema } from "src/domain/entities";
+import { HaremSchema, SessionSchema, UserSchema } from "src/domain/entities";
 
 import { AuthControllerV1 } from "../controllers";
 import { BcryptService, LocalStrategy, SessionSerializer } from "../config";
 import { SessionRepository, UserRepository } from "../repositories";
+import { HaremRepository } from "../repositories/harem.repository";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Entity.User, schema: UserSchema },
       { name: Entity.Session, schema: SessionSchema },
+      { name: Entity.Harem, schema: HaremSchema },
     ]),
     PassportModule.register({ session: true }),
   ],
@@ -36,6 +38,10 @@ import { SessionRepository, UserRepository } from "../repositories";
     {
       provide: PORT.Session,
       useClass: SessionRepository,
+    },
+    {
+      provide: PORT.Harem,
+      useClass: HaremRepository,
     },
   ],
   exports: [],

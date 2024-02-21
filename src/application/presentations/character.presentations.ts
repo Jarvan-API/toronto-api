@@ -12,7 +12,7 @@ export interface IMarry {
   picture: string;
 }
 
-export class GetHaramPresentation extends DefaultApiResponse {
+export class GetMarriesPresentation extends DefaultApiResponse {
   @ApiProperty({
     description: "The data of the marrys",
   })

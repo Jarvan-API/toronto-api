@@ -9,3 +9,4 @@ export * from "./storage-repository.interface";
 export * from "./repository.interface";
 export * from "./redis-repository.interface";
 export * from "./character-repository.interface";
+export * from "./harem-repository.interface";

@@ -5,7 +5,7 @@ import { Entity, PORT } from "src/application/enums";
 import { CharacterSchema, UserSchema } from "src/domain/entities";
 import { GetHarem, UploadCharacter } from "src/application/use-cases";
 
-import { MarryControllerV1 } from "../controllers";
+import { HaremControllerV1 } from "../controllers";
 import { CharacterRepository, UserRepository } from "../repositories";
 
 @Module({
@@ -15,8 +15,8 @@ import { CharacterRepository, UserRepository } from "../repositories";
       { name: Entity.User, schema: UserSchema },
     ]),
   ],
-  controllers: [MarryControllerV1],
+  controllers: [HaremControllerV1],
   providers: [GetHarem, UploadCharacter, { provide: PORT.User, useClass: UserRepository }, { provide: PORT.Character, useClass: CharacterRepository }],
   exports: [],
 })
-export class CharacterModule {}
+export class HaremModule {}
