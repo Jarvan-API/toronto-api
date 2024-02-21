@@ -29,6 +29,7 @@ export class UserSignUp {
       password: hashedPassword,
       status: EUserStatus.PENDING_ONBOARDING,
       role: EUserRole.USER,
+      harem: [],
     };
 
     const userCreated = await this.userRepository.create(user);

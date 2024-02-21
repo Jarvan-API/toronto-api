@@ -2,10 +2,13 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
 export interface ICharacter {
+  _id?: string;
   name: string;
   age: number;
   gender: EGender;
   picture: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export enum EGender {
@@ -21,16 +24,19 @@ export class Character extends Document {
     required: true,
   })
   name: string;
+
   @Prop({
     type: Number,
   })
   age: number;
+
   @Prop({
     type: String,
     enum: EGender,
     required: true,
   })
   gender: EGender;
+
   @Prop({
     type: String,
   })

@@ -4,6 +4,7 @@ import { EGender } from "src/domain/entities";
 
 import { DefaultApiResponse } from "../dtos";
 
+// relationship between user-character
 export interface IMarry {
   name: string;
   age: number;
