@@ -18,9 +18,10 @@ export class ChangePassword {
 
   async exec(password: string, token: string): Promise<any> {
     try {
-      const userId = await this.redisRepository.get(token);
-      console.log(userId);
-      if (!Boolean(userId)) throw new InvalidToken();
+      const stored = await this.redisRepository.get(token);
+      if (!Boolean(stored)) throw new InvalidToken();
+
+      const { userId } = JSON.parse(stored);
 
       const user = await this.userRepository.findOne({ _id: new Types.ObjectId(userId) });
 

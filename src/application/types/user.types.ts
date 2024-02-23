@@ -2,6 +2,8 @@ export enum EAdminAction {
   BLOCK_USER = "block_user",
   ACTIVE_USER = "active_user",
   SIGN_OUT = "sign_out",
+  ADD_KAKERA = "add_kakera",
+  REMOVE_KAKERA = "remove_kakera",
 }
 
 export enum EUserAction {

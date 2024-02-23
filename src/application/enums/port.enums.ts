@@ -8,4 +8,6 @@ export enum PORT {
   AdminLog = "AdminLog.Port",
   UserLog = "UserLog.Port",
   Redis = "Redis.Port",
+  Character = "Character.Port",
+  Harem = "Harem.Port",
 }
