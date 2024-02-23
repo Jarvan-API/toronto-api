@@ -21,9 +21,10 @@ export interface IUpdateKakera {
   history: IHaremHistory;
   kakera: number;
 }
+
 export class UpdateKakeraPresentation extends DefaultApiResponse {
   @ApiProperty({
-    description: "The data of the harem",
+    description: "The data about the update",
   })
   info: IUpdateKakera;
 }

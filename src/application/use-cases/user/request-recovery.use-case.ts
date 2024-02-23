@@ -19,7 +19,7 @@ export class RequestRecovery {
 
     if (!Boolean(user)) return token;
 
-    await this.redisRepository.set(token, { userId: user._id });
+    await this.redisRepository.set(token, JSON.stringify({ userId: user._id }));
 
     return token;
   }

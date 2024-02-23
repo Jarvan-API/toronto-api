@@ -215,7 +215,7 @@ export class UserControllerV1 {
 
     const token = await this.requestRecoveryUseCase.exec(email);
 
-    return { message: "Recovery password request created", token, status: HttpStatus.OK };
+    return { message: "Recovery password request created", info: { token }, status: HttpStatus.OK };
   }
 
   @Put("change-password/:token")

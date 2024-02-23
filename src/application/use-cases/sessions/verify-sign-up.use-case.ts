@@ -20,7 +20,7 @@ export class VerifySignUp {
     const { email, password } = data;
     const user: IUser = await this.userRepository.findOne({ email });
 
-    if (!user) return null;
+    if (!Boolean(user)) throw new InvalidCredentials();
 
     const matchPassword = await this.bcryptService.comparePasswords(password, user.password);
 

@@ -48,6 +48,7 @@ export class HaremHistory extends Document {
   @Prop({
     type: [{ type: Types.ObjectId }],
     ref: Entity.User,
+    default: [],
   })
   reference: Types.ObjectId;
 }
