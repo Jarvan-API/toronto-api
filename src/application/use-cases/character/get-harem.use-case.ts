@@ -16,7 +16,7 @@ export class GetHarem {
   ) {}
 
   async exec(userId: string): Promise<IGetHarem> {
-    const user = await this.userRepository.findOne({ _id: new Types.ObjectId(userId) }, "harem");
+    const user = await this.userRepository.findOne({ query: { _id: new Types.ObjectId(userId) }, populate: "harem" });
     if (!Boolean(user)) throw new UserNotFound();
     const marries = user.harem?.["characters"].map(character => {
       return {

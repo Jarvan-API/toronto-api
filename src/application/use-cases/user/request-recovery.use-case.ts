@@ -14,7 +14,7 @@ export class RequestRecovery {
   ) {}
 
   async exec(email: string): Promise<string> {
-    const user = await this.userRepository.findOne({ email });
+    const user = await this.userRepository.findOne({ query: { email } });
     const token = v4();
 
     if (!Boolean(user)) return token;

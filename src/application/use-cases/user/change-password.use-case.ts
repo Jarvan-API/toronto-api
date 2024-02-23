@@ -23,7 +23,7 @@ export class ChangePassword {
 
       const { userId } = JSON.parse(stored);
 
-      const user = await this.userRepository.findOne({ _id: new Types.ObjectId(userId) });
+      const user = await this.userRepository.findOne({ query: { _id: new Types.ObjectId(userId) } });
 
       if (!Boolean(user)) throw new UserNotFound();
 

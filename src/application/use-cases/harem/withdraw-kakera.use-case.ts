@@ -22,7 +22,7 @@ export class WithdrawKakera {
     const { amount, reason } = data;
     const myOwnRequest = userId === ourUserId;
 
-    const user = await this.userRepository.findOne({ _id: new Types.ObjectId(userId) });
+    const user = await this.userRepository.findOne({ query: { _id: new Types.ObjectId(userId) } });
 
     const history: IHaremHistory = {
       notes: reason,

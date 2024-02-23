@@ -12,7 +12,7 @@ export class GetUserProfile {
   constructor(@Inject(PORT.User) private readonly userRepository: IUserRepository) {}
 
   async exec(userId: string): Promise<IUserProfile> {
-    const user = await this.userRepository.findOne({ _id: new Types.ObjectId(userId) });
+    const user = await this.userRepository.findOne({ query: { _id: new Types.ObjectId(userId) } });
 
     const userProfile: IUserProfile = {
       firstname: user.firstname,

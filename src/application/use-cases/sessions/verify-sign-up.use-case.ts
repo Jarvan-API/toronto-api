@@ -18,7 +18,7 @@ export class VerifySignUp {
 
   async exec(data: SignInDTO): Promise<IUser> {
     const { email, password } = data;
-    const user: IUser = await this.userRepository.findOne({ email });
+    const user: IUser = await this.userRepository.findOne({ query: { email } });
 
     if (!Boolean(user)) throw new InvalidCredentials();
 

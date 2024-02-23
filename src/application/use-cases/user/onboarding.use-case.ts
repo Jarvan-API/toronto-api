@@ -14,7 +14,7 @@ export class Onboarding {
 
   async exec(data: OnboardingDTO, userId: string): Promise<any> {
     const obid = new Types.ObjectId(userId);
-    const user = await this.userRepository.findOne({ _id: obid });
+    const user = await this.userRepository.findOne({ query: { _id: obid } });
 
     if (!Boolean(user)) throw new UserNotFound();
     if (user.status !== EUserStatus.PENDING_ONBOARDING) throw new OnboardingAlreadyMade();

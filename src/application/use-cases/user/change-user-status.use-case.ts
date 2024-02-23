@@ -17,7 +17,7 @@ export class ChangeUserStatus {
   ) {}
 
   async exec(status: EUserStatus, adminId: string, userId: string, origin?: string, reason?: string, expectedStatus?: EUserStatus): Promise<any> {
-    const user = await this.userRepository.findOne({ _id: new Types.ObjectId(userId) });
+    const user = await this.userRepository.findOne({ query: { _id: new Types.ObjectId(userId) } });
 
     if (!Boolean(user)) throw new UserNotFound();
     if (user.role === EUserRole.SUDO && user._id.toString() !== adminId) throw new UserNotAllowed();

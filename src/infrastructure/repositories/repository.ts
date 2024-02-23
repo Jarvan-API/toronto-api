@@ -44,5 +44,5 @@ export abstract class Repository<T> implements IRepository<T> {
 
 export class FilterQuery<T> {
   query: MongooseFilterQuery<T>;
-  populate: string | string[];
+  populate?: string | string[];
 }

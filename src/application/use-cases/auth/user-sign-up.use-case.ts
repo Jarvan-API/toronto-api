@@ -21,7 +21,7 @@ export class UserSignUp {
   async exec(data: SignUpDTO): Promise<string> {
     const { email, password } = data;
 
-    const dup = await this.userRepository.findOne({ email });
+    const dup = await this.userRepository.findOne({ query: { email } });
     if (Boolean(dup)) throw new EmailAlreadyUsed();
 
     const hashedPassword = await this.bcryptService.encriptPassword(password);

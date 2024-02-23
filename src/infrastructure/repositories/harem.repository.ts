@@ -21,7 +21,7 @@ export class HaremRepository extends Repository<IHarem> implements IHaremReposit
       session = await this.haremModel.startSession();
       session.startTransaction();
 
-      const harem = await this.findOne({ _id });
+      const harem = await this.findOne({ query: { _id } });
 
       harem.kakera += amount;
       balance = harem.kakera;

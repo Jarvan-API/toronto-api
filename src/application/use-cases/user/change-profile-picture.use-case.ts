@@ -28,7 +28,7 @@ export class ChangeProfilePicture {
   }
 
   async exec(file: Express.Multer.File, userId: string): Promise<IUserPictureMetadata> {
-    const user = await this.userRepository.findOne({ _id: new Types.ObjectId(userId) });
+    const user = await this.userRepository.findOne({ query: { _id: new Types.ObjectId(userId) } });
 
     if (!Boolean(user)) throw new UserNotFound();
 

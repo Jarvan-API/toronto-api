@@ -11,7 +11,7 @@ export class ListPendingUsers {
   constructor(@Inject(PORT.User) private readonly userRepository: IUserRepository) {}
 
   async exec(): Promise<IPendingUser[]> {
-    const users = await this.userRepository.findAll({ status: EUserStatus.PENDING });
+    const users = await this.userRepository.findAll({ query: { status: EUserStatus.PENDING } });
 
     return users.map(user => {
       return { _id: user._id, firstname: user.firstname, lastname: user.lastname, email: user.email, createdAt: user.createdAt };
