@@ -1,4 +1,4 @@
-import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
+import { Model, Types, UpdateQuery, FilterQuery as MongooseFilterQuery } from "mongoose";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { ICreateDocument } from "src/application/types";
@@ -26,7 +26,11 @@ export abstract class Repository<T> implements IRepository<T> {
   }
 
   async findOne(filter: FilterQuery<T>): Promise<T> {
-    return await this.model.findOne(filter);
+    const query = this.model.findOne(filter);
+
+    if (Boolean(filter.populate)) query.populate(filter.populate);
+
+    return await query.exec();
   }
 
   async update(_id: string, data: UpdateQuery<T>): Promise<any> {
@@ -36,4 +40,9 @@ export abstract class Repository<T> implements IRepository<T> {
   async delete(_id: string): Promise<any> {
     return await this.model.deleteOne({ _id });
   }
+}
+
+export class FilterQuery<T> {
+  query: MongooseFilterQuery<T>;
+  populate: string | string[];
 }

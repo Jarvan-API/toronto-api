@@ -1,6 +1,7 @@
-import { FilterQuery, UpdateQuery } from "mongoose";
+import { UpdateQuery } from "mongoose";
 
 import { ICreateDocument } from "src/application/types";
+import { FilterQuery } from "src/infrastructure/repositories";
 
 export interface IRepository<T> {
   create: (data: ICreateDocument<T> | T) => Promise<T>;

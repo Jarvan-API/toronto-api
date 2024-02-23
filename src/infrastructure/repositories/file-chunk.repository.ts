@@ -12,16 +12,4 @@ export class FileChunkRepository extends Repository<IFileChunk> implements IFile
   constructor(@InjectModel(Entity.FileChunk) private readonly fileChunkModel: Model<FileChunk>) {
     super(fileChunkModel);
   }
-
-  /*
-  override async findOne(filter: FilterQuery<IFileChunk>): Promise<IFileChunk> {
-    const fileChunk = await this.fileChunkModel.findOne(filter);
-
-    if (Boolean(fileChunk)) {
-      fileChunk.storagePath = this.encryptionService.decrypt(fileChunk.storagePath);
-    }
-
-    return fileChunk;
-  }
-  */
 }
