@@ -26,7 +26,7 @@ export abstract class Repository<T> implements IRepository<T> {
   }
 
   async findOne(filter: FilterQuery<T>): Promise<T> {
-    const query = this.model.findOne(filter);
+    const query = this.model.findOne(filter.query);
 
     if (Boolean(filter.populate)) query.populate(filter.populate);
 

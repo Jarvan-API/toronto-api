@@ -1,12 +1,14 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Types } from "mongoose";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 import { ModifyKakeraDTO } from "src/application/dtos";
-import { PORT } from "src/application/enums";
+import { Events, PORT } from "src/application/enums";
+import { UserNotFound } from "src/application/exceptions";
 import { IUpdateKakera } from "src/application/presentations";
 import { EAdminAction } from "src/application/types";
 import { EActionType, IAdminLog, IHaremHistory } from "src/domain/entities";
-import { IAdminLogRepository, IHaremRepository, IUserRepository } from "src/domain/interfaces";
+import { IHaremRepository, IUserRepository } from "src/domain/interfaces";
 
 @Injectable()
 export class DepositKakera {
@@ -15,7 +17,7 @@ export class DepositKakera {
   constructor(
     @Inject(PORT.User) private readonly userRepository: IUserRepository,
     @Inject(PORT.Harem) private readonly haremRepository: IHaremRepository,
-    @Inject(PORT.AdminLog) private readonly adminLogRepoistory: IAdminLogRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async exec(userId: string, ourUserId: string, data: ModifyKakeraDTO): Promise<IUpdateKakera> {
@@ -23,6 +25,8 @@ export class DepositKakera {
     const myOwnRequest = userId === ourUserId;
 
     const user = await this.userRepository.findOne({ query: { _id: new Types.ObjectId(userId) } });
+
+    if (!Boolean(user)) throw new UserNotFound();
 
     const history: IHaremHistory = {
       notes: reason,
@@ -39,7 +43,7 @@ export class DepositKakera {
       target: new Types.ObjectId(userId),
     };
 
-    await this.adminLogRepoistory.create(adminLog);
+    this.eventEmitter.emit(Events.ADMIN_LOG, adminLog);
 
     return { kakera, history };
   }

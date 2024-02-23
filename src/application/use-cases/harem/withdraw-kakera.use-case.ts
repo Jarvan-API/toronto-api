@@ -1,12 +1,13 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { Types } from "mongoose";
 
 import { ModifyKakeraDTO } from "src/application/dtos";
-import { PORT } from "src/application/enums";
+import { Events, PORT } from "src/application/enums";
 import { IUpdateKakera } from "src/application/presentations";
 import { EAdminAction } from "src/application/types";
 import { EActionType, IAdminLog, IHaremHistory } from "src/domain/entities";
-import { IAdminLogRepository, IHaremRepository, IUserRepository } from "src/domain/interfaces";
+import { IHaremRepository, IUserRepository } from "src/domain/interfaces";
 
 @Injectable()
 export class WithdrawKakera {
@@ -15,7 +16,7 @@ export class WithdrawKakera {
   constructor(
     @Inject(PORT.User) private readonly userRepository: IUserRepository,
     @Inject(PORT.Harem) private readonly haremRepository: IHaremRepository,
-    @Inject(PORT.AdminLog) private readonly adminLogRepoistory: IAdminLogRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async exec(userId: string, ourUserId: string, data: ModifyKakeraDTO): Promise<IUpdateKakera> {
@@ -39,7 +40,7 @@ export class WithdrawKakera {
       target: new Types.ObjectId(userId),
     };
 
-    await this.adminLogRepoistory.create(adminLog);
+    this.eventEmitter.emit(Events.ADMIN_LOG, adminLog);
 
     return { kakera, history };
   }

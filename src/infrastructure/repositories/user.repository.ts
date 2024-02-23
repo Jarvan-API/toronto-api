@@ -1,6 +1,6 @@
 import { InjectModel } from "@nestjs/mongoose";
 import { Injectable } from "@nestjs/common";
-import { FilterQuery, Model } from "mongoose";
+import { Model } from "mongoose";
 
 import { IUser, User } from "src/domain/entities";
 import { IUserRepository } from "src/domain/interfaces";

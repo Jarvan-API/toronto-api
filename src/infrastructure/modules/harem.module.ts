@@ -7,6 +7,7 @@ import { WithdrawKakera, DepositKakera, GetHarem, UploadCharacter, GetAuthSessio
 
 import { HaremControllerV1 } from "../controllers";
 import { AdminLogRepository, CharacterRepository, HaremRepository, SessionRepository, UserRepository } from "../repositories";
+import { AdminLogEventModule } from "../events";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AdminLogRepository, CharacterRepository, HaremRepository, SessionReposi
       { name: Entity.AdminLog, schema: AdminLogSchema },
       { name: Entity.Session, schema: SessionSchema },
     ]),
+    AdminLogEventModule,
   ],
   controllers: [HaremControllerV1],
   providers: [

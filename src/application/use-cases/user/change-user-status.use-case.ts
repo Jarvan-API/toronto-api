@@ -1,11 +1,12 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { Types } from "mongoose";
 
-import { EUserRole, EUserStatus, PORT } from "src/application/enums";
+import { EUserRole, EUserStatus, Events, PORT } from "src/application/enums";
 import { TargetDidNotMetRequirements, UserNotAllowed, UserNotFound } from "src/application/exceptions";
 import { EAdminAction } from "src/application/types";
 import { IAdminLog } from "src/domain/entities";
-import { IAdminLogRepository, IUserRepository } from "src/domain/interfaces";
+import { IUserRepository } from "src/domain/interfaces";
 
 @Injectable()
 export class ChangeUserStatus {
@@ -13,7 +14,7 @@ export class ChangeUserStatus {
 
   constructor(
     @Inject(PORT.User) private readonly userRepository: IUserRepository,
-    @Inject(PORT.AdminLog) private readonly adminLogRepoistory: IAdminLogRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async exec(status: EUserStatus, adminId: string, userId: string, origin?: string, reason?: string, expectedStatus?: EUserStatus): Promise<any> {
@@ -33,7 +34,7 @@ export class ChangeUserStatus {
       origin,
     };
 
-    await this.adminLogRepoistory.create(log);
+    this.eventEmitter.emit(Events.ADMIN_LOG, log);
   }
 
   _getAdminAction(status: EUserStatus): EAdminAction {
