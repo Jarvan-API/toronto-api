@@ -28,7 +28,7 @@ export class UploadChunk {
   }
 
   async exec(data: UploadChunkDTO, file: Express.Multer.File, fileId: string, folderId: string, userId: string): Promise<IFileChunk> {
-    const folder = await this.folderRepository.findOne({ _id: new Types.ObjectId(folderId) });
+    const folder = await this.folderRepository.findOne({ query: { _id: new Types.ObjectId(folderId) } });
 
     if (!Boolean(folder)) throw new FolderNotFound();
     if (!isFolderVisibile(folder, userId)) throw new UserNotAllowed();

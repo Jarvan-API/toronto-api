@@ -22,7 +22,17 @@ export abstract class Repository<T> implements IRepository<T> {
   }
 
   async findAll(filter?: FilterQuery<T>): Promise<T[]> {
-    return this.model.find(filter);
+    const query = this.model.find(filter.query);
+
+    if (Boolean(filter.populate)) query.populate(filter.populate);
+
+    if (Boolean(filter.skip) && Boolean(filter.limit)) {
+      const skip = Boolean(filter.skip) ? (filter.skip - 1) * filter.limit : undefined;
+      query.skip(skip);
+      query.limit(filter.limit);
+    }
+
+    return await query.exec();
   }
 
   async findOne(filter: FilterQuery<T>): Promise<T> {
@@ -33,16 +43,22 @@ export abstract class Repository<T> implements IRepository<T> {
     return await query.exec();
   }
 
-  async update(_id: string, data: UpdateQuery<T>): Promise<any> {
-    return await this.model.findOneAndUpdate({ _id: new Types.ObjectId(_id) }, data);
+  async update(_id: string, data: UpdateQuery<T>): Promise<T | null> {
+    return this.model.findOneAndUpdate({ _id }, data, { new: true }).exec();
   }
 
   async delete(_id: string): Promise<any> {
     return await this.model.deleteOne({ _id });
+  }
+
+  async count(filter?: FilterQuery<T>): Promise<number> {
+    return await this.model.countDocuments(filter.query);
   }
 }
 
 export class FilterQuery<T> {
   query: MongooseFilterQuery<T>;
   populate?: string | string[];
+  skip?: number;
+  limit?: number;
 }

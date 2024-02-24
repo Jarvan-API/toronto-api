@@ -14,7 +14,7 @@ export class UpdateFolder {
   constructor(@Inject(PORT.Folder) private readonly folderRepository: IFolderRepository) {}
 
   async exec(data: UpdateFolderDTO, folderId: string, userId: string): Promise<IFolder> {
-    const folder = await this.folderRepository.findOne({ _id: new Types.ObjectId(folderId) });
+    const folder = await this.folderRepository.findOne({ query: { _id: new Types.ObjectId(folderId) } });
 
     if (folder.owner._id.toString() !== userId) throw new UserNotAllowed();
 

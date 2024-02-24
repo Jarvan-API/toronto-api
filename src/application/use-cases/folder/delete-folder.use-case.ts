@@ -20,7 +20,7 @@ export class DeleteFolder {
   ) {}
 
   async exec(folderId: string, userId: string): Promise<IFolderDeleted> {
-    const folder = await this.folderRepository.findOne({ _id: new Types.ObjectId(folderId) });
+    const folder = await this.folderRepository.findOne({ query: { _id: new Types.ObjectId(folderId) } });
 
     if (!Boolean(folder)) throw new FolderNotFound();
     if (!isFolderOwner(folder, userId)) throw new UserNotAllowed();

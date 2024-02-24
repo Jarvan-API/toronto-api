@@ -1,9 +1,9 @@
 import { ThrottlerGuard } from "@nestjs/throttler";
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common";
 
-import { CreateFolderDTO, DefaultApiResponse, DeleteFolderDTO, ExceptionDTO, SearchFolderDTO, UpdateFolderDTO } from "src/application/dtos";
-import { FolderCreated, FolderDetails, UserFoldersSearch } from "src/application/presentations";
+import { CreateFolderDTO, DefaultApiResponse, DeleteFolderDTO, ExceptionDTO, PaginationQuery, SearchFolderDTO, UpdateFolderDTO } from "src/application/dtos";
+import { FolderCreated, FolderDetails, IUserFolderSearch, PaginatedList, UserFoldersSearch } from "src/application/presentations";
 import { AuthenticatedGuard } from "src/infrastructure/config";
 import { CreateFolder, DeleteFolder, GetFolder, MoveFiles, SearchFolders, UpdateFolder } from "src/application/use-cases";
 
@@ -47,7 +47,7 @@ export class FolderControllerV1 {
     return { message: "New folder created", data: { id: folder._id, name: folder.name }, status: HttpStatus.CREATED };
   }
 
-  @Get("/:userId")
+  @Get("/search")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Gets all folder from user" })
   @ApiBody({
@@ -56,18 +56,18 @@ export class FolderControllerV1 {
   })
   @ApiOkResponse({
     description: "Ok request",
-    type: UserFoldersSearch,
+    type: PaginatedList<IUserFolderSearch>,
   })
   @ApiBadRequestResponse({
     description: "Bad request",
     type: ExceptionDTO,
   })
-  async searchFolders(@Body() body: SearchFolderDTO, @Request() req): Promise<UserFoldersSearch> {
+  async searchFolders(@Body() body: SearchFolderDTO, @Query("page") page: number, @Query("count") size: number, @Request() req): Promise<PaginatedList<IUserFolderSearch>> {
     const ourUserId = req.user._doc._id;
 
-    const folders = await this.searchFoldersUseCase.exec(body, ourUserId);
+    const list = await this.searchFoldersUseCase.exec(body, { page, size }, ourUserId);
 
-    return { message: "Folder list retrieved successfully", folders, status: HttpStatus.OK };
+    return { message: "Folder list retrieved successfully", info: list, status: HttpStatus.OK };
   }
 
   @Get("details/:folderId")

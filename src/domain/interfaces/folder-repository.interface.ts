@@ -1,7 +1,8 @@
-import { FilterQuery, UpdateQuery } from "mongoose";
+import { UpdateQuery } from "mongoose";
 
 import { ICreateDocument } from "src/application/types";
 import { IFolder } from "src/domain/entities";
+import { FilterQuery } from "src/infrastructure/repositories";
 
 export interface IFolderRepository {
   create: (data: ICreateDocument<IFolder> | IFolder) => Promise<IFolder>;
@@ -12,4 +13,5 @@ export interface IFolderRepository {
   findByFile: (fileId: string) => Promise<IFolder>;
   addFile: (folderId: string, fileId: string) => Promise<IFolder>;
   removeFile: (folderId: string, fileId: string) => Promise<IFolder>;
+  count: (filters?: FilterQuery<IFolder>) => Promise<number>;
 }

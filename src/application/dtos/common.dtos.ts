@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { ApiProperty, ApiQuery } from "@nestjs/swagger";
+import { IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 
 export class ExceptionDTO {
   @ApiProperty({
@@ -66,4 +66,28 @@ export class EncryptableAction {
   @IsString()
   @IsOptional()
   encryptionKey;
+}
+
+export class PaginationQuery {
+  @ApiProperty({
+    description: "The page the user has queried for",
+    type: Number,
+    example: 1,
+    default: 1,
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  page?: number;
+
+  @ApiProperty({
+    description: "The page max items count",
+    type: Number,
+    example: 4,
+    default: 1,
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  size?: number;
 }

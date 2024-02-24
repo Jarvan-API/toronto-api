@@ -19,7 +19,7 @@ export class InitializeFile {
   ) {}
 
   async exec(data: InitializeFileDTO, folderId: string, userId: string): Promise<IFile> {
-    const folder = await this.folderRepository.findOne({ _id: new Types.ObjectId(folderId) });
+    const folder = await this.folderRepository.findOne({ query: { _id: new Types.ObjectId(folderId) } });
 
     if (!Boolean(folder)) throw new FolderNotFound();
     if (!isFolderVisibile(folder, userId)) throw new UserNotAllowed();

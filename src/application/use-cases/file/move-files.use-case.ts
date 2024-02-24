@@ -22,14 +22,14 @@ export class MoveFiles {
   ) {}
 
   async exec(data: MoveFilesDTO, fromFolderId: string, userId: string): Promise<boolean> {
-    const fromFolder = await this.folderRepository.findOne({ _id: new Types.ObjectId(fromFolderId) });
+    const fromFolder = await this.folderRepository.findOne({ query: { _id: new Types.ObjectId(fromFolderId) } });
 
     // security check from folder A
     if (!Boolean(fromFolder)) throw new FolderNotFound();
     if (!isFolderOwner(fromFolder, userId)) throw new UserNotAllowed();
     if (isFolderEmpty(fromFolder)) throw new FolderIsEmpty();
 
-    const toFolder = await this.folderRepository.findOne({ _id: new Types.ObjectId(data.folder_id) });
+    const toFolder = await this.folderRepository.findOne({ query: { _id: new Types.ObjectId(data.folder_id) } });
 
     // security check from folder B
     if (!Boolean(toFolder)) throw new TargetedFolderNotFound();

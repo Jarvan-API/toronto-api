@@ -1,12 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Post, Put, Request, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Post, Put, Query, Request, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
 
 import { ChangePasswordDTO, OnboardingDTO, RequestRecoveryDTO } from "src/application/dtos";
 import { DefaultAdminActionApiRequest, DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
 import { EUserStatus } from "src/application/enums";
-import { PendingUsers, ProfilePictureChange, RequestRecoveryPresentation, UserProfile } from "src/application/presentations";
+import { IPendingUser, PaginatedList, PendingUsers, ProfilePictureChange, RequestRecoveryPresentation, UserProfile } from "src/application/presentations";
 import { ChangePassword, ChangeProfilePicture, ChangeUserStatus, GetUserProfile, ListPendingUsers, Onboarding, RequestRecovery } from "src/application/use-cases";
 import { AuthenticatedAdminGuard, AuthenticatedGuard, LowAuthenticatedGuard } from "src/infrastructure/config";
 
@@ -100,16 +100,26 @@ export class UserControllerV1 {
   @ApiOperation({ summary: "Retrieves list of pending users waiting for approval" })
   @ApiOkResponse({
     description: "Pending users list",
-    type: PendingUsers,
+    type: PaginatedList<IPendingUser>,
+  })
+  @ApiQuery({
+    description: "Current pagination index",
+    name: "page",
+    type: Number,
+  })
+  @ApiQuery({
+    description: "Current pagination index",
+    name: "count",
+    type: Number,
   })
   @ApiBadRequestResponse({
     description: "Bad request",
     type: ExceptionDTO,
   })
-  async listPendingUsers(): Promise<PendingUsers> {
-    const users = await this.listPendingUsersUseCase.exec();
+  async listPendingUsers(@Query("page") page: number, @Query("count") count: number): Promise<PaginatedList<IPendingUser>> {
+    const list = await this.listPendingUsersUseCase.exec({ page, size: count });
 
-    return { message: "List of pending users retrieved successfully", users, status: HttpStatus.FOUND };
+    return { message: "List of pending users retrieved successfully", info: list, status: HttpStatus.FOUND };
   }
 
   @Put("/pending-users/accept/:userId")

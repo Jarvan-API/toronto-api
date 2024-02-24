@@ -30,7 +30,7 @@ export class SearchFolderDTO {
   })
   @IsOptional()
   @IsString()
-  title: string;
+  name: string;
 
   @ApiProperty({
     description: "Folder visibility settings",

@@ -1,12 +1,13 @@
-import { FilterQuery, Types } from "mongoose";
+import { Types } from "mongoose";
 import { Inject, Injectable, Logger } from "@nestjs/common";
 
 import { PORT } from "src/application/enums";
-import { IUserFolderSearch } from "src/application/presentations";
+import { IPaginatedList, IUserFolderSearch } from "src/application/presentations";
 import { IFolderRepository } from "src/domain/interfaces";
 import { isFolderVisibile } from "src/infrastructure/utils";
-import { SearchFolderDTO } from "src/application/dtos";
+import { PaginationQuery, SearchFolderDTO } from "src/application/dtos";
 import { IFolder } from "src/domain/entities";
+import { FilterQuery } from "src/infrastructure/repositories";
 
 @Injectable()
 export class SearchFolders {
@@ -14,15 +15,18 @@ export class SearchFolders {
 
   constructor(@Inject(PORT.Folder) private readonly folderRepository: IFolderRepository) {}
 
-  async exec(filter: SearchFolderDTO, ourUserId: string): Promise<IUserFolderSearch[]> {
-    let query: FilterQuery<IFolder> = {};
+  async exec(search: SearchFolderDTO, query: PaginationQuery, ourUserId: string): Promise<IPaginatedList<IUserFolderSearch>> {
+    let baseQuery: any = {};
 
-    if (filter.title) query.name = { $regex: new RegExp(filter.title, "i") };
-    if (filter.owner) query.owner = new Types.ObjectId(filter.owner);
+    if (Boolean(search.name)) baseQuery.name = { $regex: new RegExp(search.name, "i") };
+    if (Boolean(search.owner)) baseQuery.owner = new Types.ObjectId(search.owner);
 
-    const folders = await this.folderRepository.findAll(query);
+    const folders = await this.folderRepository.findAll({ ...baseQuery, skip: query.page, limit: query.size });
+    const count = await this.folderRepository.count(baseQuery);
 
-    return folders
+    const pages = Math.ceil(count / query.size) | 1;
+
+    const items = folders
       .filter(folder => isFolderVisibile(folder, ourUserId))
       .map(folder => {
         const ownername = folder.owner?.["firstname"] || "Unknown";
@@ -36,5 +40,12 @@ export class SearchFolders {
           updatedAt: folder.updatedAt,
         };
       });
+
+    return {
+      items,
+      page: query.page | 1,
+      pages: pages | 1,
+      count,
+    };
   }
 }
