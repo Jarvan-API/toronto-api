@@ -1,5 +1,4 @@
 export * from "./log";
-
 export * from "./user-repository.interface";
 export * from "./session-repository.interface";
 export * from "./folder-repository.interface";
@@ -10,3 +9,4 @@ export * from "./repository.interface";
 export * from "./redis-repository.interface";
 export * from "./character-repository.interface";
 export * from "./harem-repository.interface";
+export * from "./notification-repository.interface";

@@ -9,4 +9,5 @@ export enum Entity {
   Redis = "Redis",
   Character = "Character",
   Harem = "Harem",
+  Notification = "Notification",
 }

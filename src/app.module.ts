@@ -7,6 +7,7 @@ import { AppController } from "./infrastructure/controllers";
 import { BcryptModule, MongoDBModule, RedisModule, SentryModule } from "./infrastructure/config";
 import { AuthModule, HaremModule, FileModule, FolderModule, UserModule } from "./infrastructure/modules";
 import { SentryMiddleware } from "./infrastructure/middlewares";
+import { NotificationModule } from "./infrastructure/modules/notifications.module";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SentryMiddleware } from "./infrastructure/middlewares";
     UserModule,
     HaremModule,
     SentryModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [],

@@ -18,7 +18,10 @@ export abstract class Repository<T> implements IRepository<T> {
 
   async create(data: ICreateDocument<T>): Promise<T> {
     // encriptar
-    return await this.model.create(data.value || data);
+    console.log("ok", data);
+    const a = await this.model.create(data.value || data);
+    console.log(a);
+    return a;
   }
 
   async findAll(filter?: FilterQuery<T>): Promise<T[]> {
