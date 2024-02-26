@@ -2,11 +2,11 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
-import { AdminLogSchema, CharacterSchema, HaremSchema, SessionSchema, UserSchema } from "src/domain/entities";
-import { WithdrawKakera, DepositKakera, GetHarem, GetAuthSession } from "src/application/use-cases";
+import { CharacterSchema, HaremSchema, SessionSchema, UserSchema } from "src/domain/entities";
+import { GetCharacters } from "src/application/use-cases";
 
-import { HaremControllerV1 } from "../controllers";
-import { AdminLogRepository, CharacterRepository, HaremRepository, SessionRepository, UserRepository } from "../repositories";
+import { CharacterControllerV1 } from "../controllers";
+import { CharacterRepository, SessionRepository, UserRepository } from "../repositories";
 import { AdminLogEventModule } from "../events";
 
 @Module({
@@ -15,23 +15,17 @@ import { AdminLogEventModule } from "../events";
       { name: Entity.Character, schema: CharacterSchema },
       { name: Entity.User, schema: UserSchema },
       { name: Entity.Harem, schema: HaremSchema },
-      { name: Entity.AdminLog, schema: AdminLogSchema },
       { name: Entity.Session, schema: SessionSchema },
     ]),
     AdminLogEventModule,
   ],
-  controllers: [HaremControllerV1],
+  controllers: [CharacterControllerV1],
   providers: [
-    GetHarem,
-    DepositKakera,
-    WithdrawKakera,
-    GetAuthSession,
-    { provide: PORT.Harem, useClass: HaremRepository },
+    GetCharacters,
     { provide: PORT.User, useClass: UserRepository },
     { provide: PORT.Character, useClass: CharacterRepository },
     { provide: PORT.Session, useClass: SessionRepository },
-    { provide: PORT.AdminLog, useClass: AdminLogRepository },
   ],
   exports: [],
 })
-export class HaremModule {}
+export class CharacterModule {}

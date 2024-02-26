@@ -6,8 +6,6 @@ import { IPaginatedList, IUserFolderSearch } from "src/application/presentations
 import { IFolderRepository } from "src/domain/interfaces";
 import { isFolderVisibile } from "src/infrastructure/utils";
 import { PaginationQuery, SearchFolderDTO } from "src/application/dtos";
-import { IFolder } from "src/domain/entities";
-import { FilterQuery } from "src/infrastructure/repositories";
 
 @Injectable()
 export class SearchFolders {
@@ -45,7 +43,7 @@ export class SearchFolders {
       items,
       page: query.page | 1,
       pages: pages | 1,
-      count,
+      count: items.length,
     };
   }
 }

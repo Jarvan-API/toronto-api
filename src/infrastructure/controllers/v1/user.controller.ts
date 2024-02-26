@@ -6,7 +6,7 @@ import { ThrottlerGuard } from "@nestjs/throttler";
 import { ChangePasswordDTO, OnboardingDTO, RequestRecoveryDTO } from "src/application/dtos";
 import { DefaultAdminActionApiRequest, DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
 import { EUserStatus } from "src/application/enums";
-import { IPendingUser, PaginatedList, PendingUsers, ProfilePictureChange, RequestRecoveryPresentation, UserProfile } from "src/application/presentations";
+import { IPendingUser, PaginatedList, ProfilePictureChange, RequestRecoveryPresentation, UserProfile } from "src/application/presentations";
 import { ChangePassword, ChangeProfilePicture, ChangeUserStatus, GetUserProfile, ListPendingUsers, Onboarding, RequestRecovery } from "src/application/use-cases";
 import { AuthenticatedAdminGuard, AuthenticatedGuard, LowAuthenticatedGuard } from "src/infrastructure/config";
 

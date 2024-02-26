@@ -6,3 +6,4 @@ export * from "./file";
 export * from "./log";
 export * from "./character";
 export * from "./harem";
+export * from "./marry";

@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
+
+import { Entity } from "src/application/enums";
 
 export interface ICharacter {
   _id?: string;
@@ -7,6 +9,7 @@ export interface ICharacter {
   age: number;
   gender: EGender;
   picture: string;
+  owner?: Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -41,6 +44,9 @@ export class Character extends Document {
     type: String,
   })
   picture: string;
+
+  @Prop({ type: Types.ObjectId, ref: Entity.User, required: false })
+  owner: Types.ObjectId;
 }
 
 export const CharacterSchema = SchemaFactory.createForClass(Character);

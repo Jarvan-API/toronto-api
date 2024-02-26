@@ -5,7 +5,7 @@ import { EventEmitterModule } from "@nestjs/event-emitter";
 
 import { AppController } from "./infrastructure/controllers";
 import { BcryptModule, MongoDBModule, RedisModule, SentryModule } from "./infrastructure/config";
-import { AuthModule, HaremModule, FileModule, FolderModule, UserModule } from "./infrastructure/modules";
+import { AuthModule, HaremModule, FileModule, FolderModule, UserModule, CharacterModule, MarryModule } from "./infrastructure/modules";
 import { SentryMiddleware } from "./infrastructure/middlewares";
 import { NotificationModule } from "./infrastructure/modules/notifications.module";
 
@@ -31,8 +31,10 @@ import { NotificationModule } from "./infrastructure/modules/notifications.modul
     FileModule,
     UserModule,
     HaremModule,
+    CharacterModule,
     SentryModule,
     NotificationModule,
+    MarryModule,
   ],
   controllers: [AppController],
   providers: [],

@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 
 import { PORT } from "src/application/enums";
 import { UserNotFound } from "src/application/exceptions";
-import { GetHaremPresentation, IGetHarem, IMarry } from "src/application/presentations";
+import { IGetHarem } from "src/application/presentations";
 import { IHaremRepository, IUserRepository } from "src/domain/interfaces";
 
 @Injectable()

@@ -6,6 +6,7 @@ import { IUserPictureMetadata, UserPictureMetadataSchema } from "./user-picture-
 
 export interface IUser {
   _id?: string;
+  name?: string;
   firstname?: string;
   lastname?: string;
   email: string;
@@ -21,6 +22,11 @@ export interface IUser {
 
 @Schema({ versionKey: false, timestamps: true })
 export class User extends Document {
+  @Prop({
+    type: String,
+  })
+  name: string;
+
   @Prop({
     type: String,
   })
