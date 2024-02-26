@@ -1,6 +1,7 @@
-import { FilterQuery, UpdateQuery } from "mongoose";
+import { UpdateQuery } from "mongoose";
 
 import { ICreateDocument } from "src/application/types";
+import { FilterQuery } from "src/infrastructure/repositories";
 
 import { ICharacter } from "../entities";
 
@@ -9,4 +10,5 @@ export interface ICharacterRepository {
   findAll: (filter?: FilterQuery<ICharacter>) => Promise<ICharacter[]>;
   update: (_id: string, data: UpdateQuery<ICharacter>) => Promise<any>;
   delete: (_id: string) => Promise<any>;
+  count: (filter?: FilterQuery<ICharacter>) => Promise<number>;
 }

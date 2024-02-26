@@ -28,13 +28,6 @@ export interface IPendingUser {
   createdAt: Date;
 }
 
-export class PendingUsers extends DefaultApiResponse {
-  @ApiProperty({
-    description: "List of pending users",
-  })
-  users: IPendingUser[];
-}
-
 export class ProfilePictureChange extends DefaultApiResponse {
   @ApiProperty({
     description: "New profile picture path",

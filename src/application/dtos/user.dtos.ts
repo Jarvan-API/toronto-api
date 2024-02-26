@@ -3,6 +3,16 @@ import { IsNotEmpty, IsString } from "class-validator";
 
 export class OnboardingDTO {
   @ApiProperty({
+    description: "User name",
+    example: "sp33d3rs",
+    type: String,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @ApiProperty({
     description: "User firstname",
     example: "Lucas",
     type: String,

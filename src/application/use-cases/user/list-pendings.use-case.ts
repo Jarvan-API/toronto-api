@@ -27,7 +27,7 @@ export class ListPendingUsers {
     return {
       items,
       pages,
-      count,
+      count: items.length,
       page: query.page | 1,
     };
   }

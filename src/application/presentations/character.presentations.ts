@@ -1,20 +1,14 @@
-import { ApiProperty } from "@nestjs/swagger";
-
 import { EGender } from "src/domain/entities";
 
-import { DefaultApiResponse } from "../dtos";
+export class ICharacterOwner {
+  name: string;
+  picture?: string;
+}
 
-// relationship between user-character
-export interface IMarry {
+export class IGetCharacters {
   name: string;
   age: number;
   gender: EGender;
-  picture: string;
-}
-
-export class GetMarriesPresentation extends DefaultApiResponse {
-  @ApiProperty({
-    description: "The data of the marrys",
-  })
-  info: IMarry[];
+  picture?: string;
+  owner?: ICharacterOwner;
 }

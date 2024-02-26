@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { IMarry } from "./character.presentations";
-import { IHaremHistory } from "src/domain/entities";
+import { EGender, IHaremHistory } from "src/domain/entities";
 
 import { DefaultApiResponse } from "../dtos";
 
@@ -27,4 +26,18 @@ export class UpdateKakeraPresentation extends DefaultApiResponse {
     description: "The data about the update",
   })
   info: IUpdateKakera;
+}
+
+export interface IMarry {
+  name: string;
+  age: number;
+  gender: EGender;
+  picture: string;
+}
+
+export class GetMarriesPresentation extends DefaultApiResponse {
+  @ApiProperty({
+    description: "The data of the marrys",
+  })
+  info: IMarry[];
 }
