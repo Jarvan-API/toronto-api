@@ -4,3 +4,4 @@ export * from "./user.exceptions";
 export * from "./folder.exceptions";
 export * from "./file.exceptions";
 export * from "./common.exceptions";
+export * from "./marry.exceptions";
