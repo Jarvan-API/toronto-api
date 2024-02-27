@@ -3,6 +3,7 @@ import { Document, Types } from "mongoose";
 
 import { EUserRole, EUserStatus, Entity } from "src/application/enums";
 import { IUserPictureMetadata, UserPictureMetadataSchema } from "./user-picture-metadata.entity";
+import { IUserNotification, UserNotification } from "./user-notification.entity";
 
 export interface IUser {
   _id?: string;
@@ -16,6 +17,7 @@ export interface IUser {
   dob?: Date;
   pictureMetadata?: IUserPictureMetadata;
   harem: Types.ObjectId;
+  notifications: IUserNotification[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -74,6 +76,9 @@ export class User extends Document {
 
   @Prop({ type: Types.ObjectId, ref: Entity.Harem })
   harem: Types.ObjectId;
+
+  @Prop({ type: [{ type: UserNotification }], required: false, default: [] })
+  notifications: IUserNotification[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

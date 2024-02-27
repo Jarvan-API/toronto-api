@@ -17,7 +17,6 @@ export abstract class Repository<T> implements IRepository<T> {
   }
 
   async create(data: ICreateDocument<T>): Promise<T> {
-    // encriptar
     return await this.model.create(data.value || data);
   }
 
@@ -45,6 +44,10 @@ export abstract class Repository<T> implements IRepository<T> {
 
   async update(_id: string, data: UpdateQuery<T>): Promise<T | null> {
     return this.model.findOneAndUpdate({ _id }, data, { new: true }).exec();
+  }
+
+  async updateAll(filter: FilterQuery<T>, data: UpdateQuery<T>): Promise<any> {
+    return this.model.updateMany(filter.query, data);
   }
 
   async delete(_id: string): Promise<any> {

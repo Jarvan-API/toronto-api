@@ -8,5 +8,6 @@ export interface IRepository<T> {
   findAll: (filter?: FilterQuery<T>) => Promise<T[]>;
   findOne: (filters: FilterQuery<T>) => Promise<T>;
   update: (_id: string, data: UpdateQuery<T>) => Promise<any>;
+  updateAll: (filter: FilterQuery<T>, data: UpdateQuery<T>) => Promise<any>;
   delete: (_id: string) => Promise<any>;
 }

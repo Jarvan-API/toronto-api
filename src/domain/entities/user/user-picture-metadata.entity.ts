@@ -2,15 +2,12 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 
 export interface IUserPictureMetadata {
-  _id?: Types.ObjectId;
   originalName: string;
   totalSize: number;
   path: string;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
-@Schema({ versionKey: false, timestamps: true })
+@Schema({ versionKey: false, timestamps: false, _id: false })
 export class UserPictureMetadata extends Document {
   @Prop({ required: true })
   originalName: string;

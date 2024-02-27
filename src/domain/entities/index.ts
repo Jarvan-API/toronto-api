@@ -6,4 +6,5 @@ export * from "./file-chunk";
 export * from "./session";
 export * from "./character";
 export * from "./harem";
+export * from "./notifications";
 export * from "./marry";

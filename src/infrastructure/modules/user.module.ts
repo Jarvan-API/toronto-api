@@ -3,11 +3,12 @@ import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
 import { ChangeUserStatus, ChangeProfilePicture, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding, RequestRecovery, ChangePassword } from "src/application/use-cases";
-import { AdminLogSchema, SessionSchema, UserSchema } from "src/domain/entities";
+import { AdminLogSchema, SessionSchema, UserSchema, NotificationSchema } from "src/domain/entities";
 
 import { UserControllerV1 } from "../controllers";
 import { AdminLogRepository, RedisRepository, SessionRepository, StorageRepository, UserRepository } from "../repositories";
 import { BcryptService } from "../config";
+import { NotificationRepository } from "../repositories/notification.repository";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { BcryptService } from "../config";
       { name: Entity.User, schema: UserSchema },
       { name: Entity.Session, schema: SessionSchema },
       { name: Entity.AdminLog, schema: AdminLogSchema },
+      { name: Entity.Notification, schema: NotificationSchema },
     ]),
   ],
   controllers: [UserControllerV1],
@@ -47,6 +49,10 @@ import { BcryptService } from "../config";
     {
       provide: PORT.Redis,
       useClass: RedisRepository,
+    },
+    {
+      provide: PORT.Notification,
+      useClass: NotificationRepository,
     },
   ],
   exports: [],
