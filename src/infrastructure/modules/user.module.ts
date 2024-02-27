@@ -3,7 +3,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
 import { ChangeUserStatus, ChangeProfilePicture, GetAuthSession, GetUserProfile, ListPendingUsers, Onboarding, RequestRecovery, ChangePassword } from "src/application/use-cases";
-import { AdminLogSchema, UserNotificationSchema, SessionSchema, UserSchema, NotificationSchema } from "src/domain/entities";
+import { AdminLogSchema, SessionSchema, UserSchema, NotificationSchema } from "src/domain/entities";
 
 import { UserControllerV1 } from "../controllers";
 import { AdminLogRepository, RedisRepository, SessionRepository, StorageRepository, UserRepository } from "../repositories";

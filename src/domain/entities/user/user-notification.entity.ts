@@ -3,22 +3,19 @@ import { Document, Types } from "mongoose";
 
 import { Entity } from "src/application/enums";
 
-export interface IUserNotifications {
+export interface IUserNotification {
   notification: Types.ObjectId;
   seenAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-@Schema({ versionKey: false, timestamps: true, id: false })
+@Schema({ versionKey: false, timestamps: true, _id: false })
 export class UserNotification extends Document {
-  @Prop({
-    type: [{ type: Types.ObjectId }],
-    ref: Entity.Notification,
-  })
+  @Prop({ type: Types.ObjectId, ref: Entity.Notification, required: true })
   notification: Types.ObjectId;
 
-  @Prop({
-    type: Date,
-  })
+  @Prop({ type: Date, required: false })
   seenAt: Date;
 }
 

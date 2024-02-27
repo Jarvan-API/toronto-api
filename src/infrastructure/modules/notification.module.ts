@@ -2,19 +2,18 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
-import { AdminLogSchema, NotificationSchema, SessionSchema, UserSchema } from "src/domain/entities";
-import { GetAuthSession } from "src/application/use-cases";
-import { PublishNotification } from "src/application/use-cases/notification";
+import { NotificationSchema, SessionSchema, UserSchema } from "src/domain/entities";
+import { GetAuthSession, PublishNotification } from "src/application/use-cases";
 
-import { AdminLogRepository, SessionRepository, UserRepository } from "../repositories";
+import { NotificationRepository, SessionRepository, UserRepository } from "../repositories";
 import { AdminLogEventModule, PublishNotificationEventListener } from "../events";
-import { NotificationRepository } from "../repositories/notification.repository";
-import { NotificationControllerV1 } from "../controllers/v1/notification.controller";
+import { NotificationControllerV1 } from "../controllers";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Entity.Notification, schema: NotificationSchema },
+      { name: Entity.User, schema: UserSchema },
       { name: Entity.Session, schema: SessionSchema },
     ]),
     AdminLogEventModule,
@@ -24,6 +23,7 @@ import { NotificationControllerV1 } from "../controllers/v1/notification.control
     GetAuthSession,
     PublishNotificationEventListener,
     PublishNotification,
+    { provide: PORT.User, useClass: UserRepository },
     { provide: PORT.Notification, useClass: NotificationRepository },
     { provide: PORT.Session, useClass: SessionRepository },
   ],

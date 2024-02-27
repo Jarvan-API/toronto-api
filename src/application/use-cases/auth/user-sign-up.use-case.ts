@@ -33,6 +33,7 @@ export class UserSignUp {
       status: EUserStatus.PENDING_ONBOARDING,
       role: EUserRole.USER,
       harem: new Types.ObjectId(harem._id),
+      notifications: [],
     };
 
     const userCreated = await this.userRepository.create(user);

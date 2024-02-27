@@ -1,16 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Types } from "mongoose";
-import { IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 import { ENotificationSeverity } from "src/domain/entities";
 
 export class NotificationDTO {
-  @ApiProperty({
-    description: "Emitter ID",
-  })
-  @IsNotEmpty()
-  emitter: Types.ObjectId;
-
   @ApiProperty({
     description: "Emitter reference",
     type: String,
@@ -42,4 +36,11 @@ export class NotificationDTO {
   @IsDate()
   @IsOptional()
   expiresAt: Date;
+
+  @ApiProperty({
+    description: "Users that will receive this message",
+    type: Array,
+  })
+  @IsArray()
+  receivers: Types.ObjectId[];
 }

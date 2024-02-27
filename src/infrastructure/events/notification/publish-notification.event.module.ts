@@ -3,7 +3,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 
 import { Entity, PORT } from "src/application/enums";
 import { NotificationSchema } from "src/domain/entities";
-import { NotificationRepository } from "src/infrastructure/repositories/notification.repository";
+import { NotificationRepository } from "src/infrastructure/repositories";
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: Entity.Notification, schema: NotificationSchema }])],

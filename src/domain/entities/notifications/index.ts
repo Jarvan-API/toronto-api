@@ -1,2 +1,1 @@
-export * from "./notifications.entity";
-export * from "./user-notification.entity";
+export * from "./notification.entity";
