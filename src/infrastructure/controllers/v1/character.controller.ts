@@ -1,10 +1,10 @@
 import { Controller, Get, HttpCode, HttpStatus, Query, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiQuery } from "@nestjs/swagger";
+import { ApiOkResponse, ApiQuery } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
 
-import { ExceptionDTO } from "src/application/dtos";
 import { IGetCharacters, PaginatedList } from "src/application/presentations";
 import { GetCharacters } from "src/application/use-cases";
+import { GenericSwagger } from "src/infrastructure/decorators/swagger.decorator";
 
 @Controller({
   path: "characters",
@@ -16,15 +16,7 @@ export class CharacterControllerV1 {
 
   @Get("/list")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "List characters" })
-  @ApiOkResponse({
-    description: "List of all characters",
-    type: PaginatedList<IGetCharacters>,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "List characters" })
   @ApiQuery({
     description: "Current pagination index",
     name: "page",
@@ -34,6 +26,10 @@ export class CharacterControllerV1 {
     description: "Current pagination index",
     name: "count",
     type: Number,
+  })
+  @ApiOkResponse({
+    description: "List of all characters",
+    type: PaginatedList<IGetCharacters>,
   })
   async getCharacters(@Query("page") page: number, @Query("count") size: number): Promise<PaginatedList<IGetCharacters>> {
     const characters = await this.getCharactersUseCase.exec({ page, size });

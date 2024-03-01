@@ -6,6 +6,7 @@ import { CreateFolderDTO, DefaultApiResponse, DeleteFolderDTO, ExceptionDTO, Pag
 import { FolderCreated, FolderDetails, IUserFolderSearch, PaginatedList, UserFoldersSearch } from "src/application/presentations";
 import { AuthenticatedGuard } from "src/infrastructure/config";
 import { CreateFolder, DeleteFolder, GetFolder, MoveFiles, SearchFolders, UpdateFolder } from "src/application/use-cases";
+import { GenericSwagger } from "src/infrastructure/decorators/swagger.decorator";
 
 @Controller({
   path: "folder",
@@ -27,17 +28,10 @@ export class FolderControllerV1 {
 
   @Post("create")
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: "Creates folder" })
-  @ApiBody({
-    type: CreateFolderDTO,
-  })
+  @GenericSwagger({ summary: "Creates folder", body: CreateFolderDTO })
   @ApiOkResponse({
     description: "Folder created",
     type: FolderCreated,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
   })
   async createFolder(@Body() data: CreateFolderDTO, @Request() req): Promise<FolderCreated> {
     const userId = req.user._doc._id;
@@ -49,18 +43,10 @@ export class FolderControllerV1 {
 
   @Get("/search")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Gets all folder from user" })
-  @ApiBody({
-    description: "Search filter",
-    type: SearchFolderDTO,
-  })
+  @GenericSwagger({ summary: "Gets all folder from user", body: SearchFolderDTO })
   @ApiOkResponse({
     description: "Ok request",
     type: PaginatedList<IUserFolderSearch>,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
   })
   async searchFolders(@Body() body: SearchFolderDTO, @Query("page") page: number, @Query("count") size: number, @Request() req): Promise<PaginatedList<IUserFolderSearch>> {
     const ourUserId = req.user._doc._id;
@@ -72,19 +58,10 @@ export class FolderControllerV1 {
 
   @Get("details/:folderId")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Gets all folder from user" })
-  @ApiParam({
-    name: "folderId",
-    description: "Folder ID",
-    type: String,
-  })
+  @GenericSwagger({ summary: "Gets all folder from user", apiParam: "folderId" })
   @ApiOkResponse({
     description: "Ok request",
     type: FolderDetails,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
   })
   async getFolder(@Param("folderId") folderId: string, @Request() req): Promise<FolderDetails> {
     const ourUserId = req.user._doc._id;
@@ -96,24 +73,7 @@ export class FolderControllerV1 {
 
   @Patch("/:folderId")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Updates a folder data" })
-  @ApiParam({
-    name: "folderId",
-    description: "Folder ID",
-    type: String,
-  })
-  @ApiBody({
-    description: "Folder's new data",
-    type: UpdateFolderDTO,
-  })
-  @ApiOkResponse({
-    description: "Ok request",
-    type: DefaultApiResponse,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Updates a folder data", apiParam: "folderId", body: UpdateFolderDTO })
   async updateFolder(@Param("folderId") folderId: string, @Request() req, @Body() data: UpdateFolderDTO): Promise<DefaultApiResponse> {
     const ourUserId = req.user._doc._id;
 
@@ -124,24 +84,7 @@ export class FolderControllerV1 {
 
   @Delete("/:folderId")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Removes a folder" })
-  @ApiParam({
-    name: "folderId",
-    description: "Folder ID",
-    type: String,
-  })
-  @ApiBody({
-    description: "Folder's new data",
-    type: DeleteFolderDTO,
-  })
-  @ApiOkResponse({
-    description: "Ok request",
-    type: DefaultApiResponse,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Removes a folder", apiParam: "folderId", body: DeleteFolderDTO })
   async deleteFolder(@Param("folderId") folderId: string, @Request() req, @Body() data: DeleteFolderDTO): Promise<DefaultApiResponse> {
     const ourUserId = req.user._doc._id;
 

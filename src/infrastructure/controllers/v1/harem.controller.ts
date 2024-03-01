@@ -6,6 +6,7 @@ import { ExceptionDTO, ModifyKakeraDTO } from "src/application/dtos";
 import { GetHaremPresentation, UpdateKakeraPresentation } from "src/application/presentations";
 import { DepositKakera, GetHarem, WithdrawKakera } from "src/application/use-cases";
 import { AuthenticatedAdminGuard, AuthenticatedGuard } from "src/infrastructure/config";
+import { GenericSwagger } from "src/infrastructure/decorators/swagger.decorator";
 
 @Controller({
   path: "harem",
@@ -22,15 +23,7 @@ export class HaremControllerV1 {
   @UseGuards(AuthenticatedGuard)
   @Get(":userId")
   @HttpCode(HttpStatus.FOUND)
-  @ApiOperation({ summary: "List user harem" })
-  @ApiOkResponse({
-    description: "List of user's marries",
-    type: GetHaremPresentation,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "List user harem" })
   async getHarem(@Param("userId") userId: string): Promise<GetHaremPresentation> {
     const marries = await this.getHaremUseCase.exec(userId);
 
@@ -40,14 +33,10 @@ export class HaremControllerV1 {
   @UseGuards(AuthenticatedAdminGuard)
   @Put(":userId/deposit")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Adds kakera to user" })
+  @GenericSwagger({ summary: "Adds kakera to user" })
   @ApiOkResponse({
     description: "Deposit successfully made",
     type: UpdateKakeraPresentation,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
   })
   async depositKakera(@Param("userId") userId: string, @Request() req, @Body() body: ModifyKakeraDTO): Promise<UpdateKakeraPresentation> {
     const adminId = req.user._doc._id;
@@ -60,14 +49,10 @@ export class HaremControllerV1 {
   @UseGuards(AuthenticatedAdminGuard)
   @Put(":userId/withdraw")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Removes kakera from user" })
+  @GenericSwagger({ summary: "Removes kakera from user" })
   @ApiOkResponse({
     description: "Withdraw successfully made",
     type: UpdateKakeraPresentation,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
   })
   async withdrawKakera(@Param("userId") userId: string, @Request() req, @Body() body: ModifyKakeraDTO): Promise<UpdateKakeraPresentation> {
     const adminId = req.user._doc._id;
