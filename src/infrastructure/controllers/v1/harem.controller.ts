@@ -1,8 +1,8 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Put, Request, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from "@nestjs/swagger";
+import {  ApiOkResponse } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
 
-import { ExceptionDTO, ModifyKakeraDTO } from "src/application/dtos";
+import { ModifyKakeraDTO } from "src/application/dtos";
 import { GetHaremPresentation, UpdateKakeraPresentation } from "src/application/presentations";
 import { DepositKakera, GetHarem, WithdrawKakera } from "src/application/use-cases";
 import { AuthenticatedAdminGuard, AuthenticatedGuard } from "src/infrastructure/config";

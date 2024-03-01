@@ -1,9 +1,9 @@
 import { ThrottlerGuard } from "@nestjs/throttler";
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common";
 
-import { CreateFolderDTO, DefaultApiResponse, DeleteFolderDTO, ExceptionDTO, PaginationQuery, SearchFolderDTO, UpdateFolderDTO } from "src/application/dtos";
-import { FolderCreated, FolderDetails, IUserFolderSearch, PaginatedList, UserFoldersSearch } from "src/application/presentations";
+import { CreateFolderDTO, DefaultApiResponse, DeleteFolderDTO, SearchFolderDTO, UpdateFolderDTO } from "src/application/dtos";
+import { FolderCreated, FolderDetails, IUserFolderSearch, PaginatedList } from "src/application/presentations";
 import { AuthenticatedGuard } from "src/infrastructure/config";
 import { CreateFolder, DeleteFolder, GetFolder, MoveFiles, SearchFolders, UpdateFolder } from "src/application/use-cases";
 import { GenericSwagger } from "src/infrastructure/decorators/swagger.decorator";

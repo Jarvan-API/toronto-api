@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Post, Request, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
 
 import { SignInDTO, SignUpDTO } from "src/application/dtos";
-import { DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
+import { DefaultApiResponse } from "src/application/dtos/common.dtos";
 import { UserCreated, UserLoggedIn } from "src/application/presentations";
 import { UserSignIn, UserSignUp } from "src/application/use-cases";
 import { LocalAuthGuard, LowAuthenticatedGuard } from "src/infrastructure/config";

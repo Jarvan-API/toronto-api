@@ -3,8 +3,7 @@ import { Body, Controller, Get, HttpStatus, Logger, Param, Post, Request, Respon
 import { ThrottlerGuard } from "@nestjs/throttler";
 import { FileInterceptor } from "@nestjs/platform-express";
 
-import { AuthenticatedGuard } from "src/infrastructure/config";
-import { DefaultApiResponse, InitializeFileDTO, UploadChunkDTO } from "src/application/dtos";
+import { DefaultApiResponse, InitializeFileDTO } from "src/application/dtos";
 import { DownloadFile, GetFile, InitializeFile, UploadChunk } from "src/application/use-cases";
 import { FileInitialized, FilePresentation } from "src/application/presentations";
 import { IFile } from "src/domain/entities";
