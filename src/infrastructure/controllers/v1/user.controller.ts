@@ -1,14 +1,15 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Post, Put, Query, Request, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Post, Put, Query, Request, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiOkResponse, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
 
 import { ChangePasswordDTO, OnboardingDTO, RequestRecoveryDTO } from "src/application/dtos";
-import { DefaultAdminActionApiRequest, DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
+import { DefaultAdminActionApiRequest, DefaultApiResponse } from "src/application/dtos/common.dtos";
 import { EUserStatus } from "src/application/enums";
 import { IPendingUser, PaginatedList, ProfilePictureChange, RequestRecoveryPresentation, UserProfile } from "src/application/presentations";
 import { ChangePassword, ChangeProfilePicture, ChangeUserStatus, GetUserProfile, ListPendingUsers, Onboarding, RequestRecovery } from "src/application/use-cases";
 import { AuthenticatedAdminGuard, AuthenticatedGuard, LowAuthenticatedGuard } from "src/infrastructure/config";
+import { GenericSwagger } from "src/infrastructure/decorators/swagger.decorator";
 
 @Controller({
   path: "user",
@@ -32,15 +33,7 @@ export class UserControllerV1 {
   @Get("/me")
   @HttpCode(HttpStatus.FOUND)
   @UseGuards(LowAuthenticatedGuard)
-  @ApiOperation({ summary: "Search for current logged user's information" })
-  @ApiOkResponse({
-    description: "User found",
-    type: UserProfile,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Search for current logged user's information" })
   async getProfile(@Request() req): Promise<UserProfile> {
     const userId = req.user._doc._id;
 
@@ -52,19 +45,7 @@ export class UserControllerV1 {
   @Put("/onboarding")
   @HttpCode(HttpStatus.OK)
   @UseGuards(LowAuthenticatedGuard)
-  @ApiOperation({ summary: "Complete user's information" })
-  @ApiBody({
-    description: "Onboarding data",
-    type: OnboardingDTO,
-  })
-  @ApiOkResponse({
-    description: "Onboarding made",
-    type: DefaultApiResponse,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Complete user's information", body: OnboardingDTO })
   async onboarding(@Request() req, @Body() body: OnboardingDTO): Promise<DefaultApiResponse> {
     const userId = req.user?._doc?._id;
     await this.onboardingUseCase.exec(body, userId);
@@ -75,15 +56,7 @@ export class UserControllerV1 {
   @Put("/change-picture")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthenticatedGuard)
-  @ApiOperation({ summary: "Changes profile picture from user" })
-  @ApiOkResponse({
-    description: "Ok request",
-    type: ProfilePictureChange,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Changes profile picture from user" })
   @UseInterceptors(FileInterceptor("file"))
   async changePicture(@UploadedFile() file: Express.Multer.File, @Request() req): Promise<ProfilePictureChange> {
     const userId = req.user._doc._id;
@@ -97,11 +70,7 @@ export class UserControllerV1 {
   @Get("/pending-users")
   @HttpCode(HttpStatus.FOUND)
   @UseGuards(AuthenticatedAdminGuard)
-  @ApiOperation({ summary: "Retrieves list of pending users waiting for approval" })
-  @ApiOkResponse({
-    description: "Pending users list",
-    type: PaginatedList<IPendingUser>,
-  })
+  @GenericSwagger({ summary: "Retrieves list of pending users waiting for approval" })
   @ApiQuery({
     description: "Current pagination index",
     name: "page",
@@ -112,9 +81,9 @@ export class UserControllerV1 {
     name: "count",
     type: Number,
   })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
+  @ApiOkResponse({
+    description: "Pending users list",
+    type: PaginatedList<IPendingUser>,
   })
   async listPendingUsers(@Query("page") page: number, @Query("count") count: number): Promise<PaginatedList<IPendingUser>> {
     const list = await this.listPendingUsersUseCase.exec({ page, size: count });
@@ -125,20 +94,7 @@ export class UserControllerV1 {
   @Put("/pending-users/accept/:userId")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthenticatedAdminGuard)
-  @ApiOperation({ summary: "Approves user from pending list" })
-  @ApiParam({
-    name: "userId",
-    description: "Pending user ID",
-    type: String,
-  })
-  @ApiOkResponse({
-    description: "Ok request",
-    type: DefaultApiResponse,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Approves user from pending list", apiParam: "userId" })
   async acceptPendingUser(@Param("userId") userId: string, @Request() req): Promise<DefaultApiResponse> {
     const adminId = req.user._doc._id;
 
@@ -150,24 +106,7 @@ export class UserControllerV1 {
   @Put("/pending-users/reject/:userId")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthenticatedAdminGuard)
-  @ApiOperation({ summary: "Rejects user from pending list" })
-  @ApiParam({
-    name: "userId",
-    description: "Pending user ID",
-    type: String,
-  })
-  @ApiBody({
-    description: "Reject information",
-    type: DefaultAdminActionApiRequest,
-  })
-  @ApiOkResponse({
-    description: "Ok request",
-    type: DefaultApiResponse,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Rejects user from pending list", apiParam: "userId" })
   async rejectPendingUser(@Param("userId") userId: string, @Request() req, @Body() data: DefaultAdminActionApiRequest): Promise<DefaultApiResponse> {
     const adminId = req.user._doc._id;
 
@@ -179,24 +118,7 @@ export class UserControllerV1 {
   @Put("block/:userId")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthenticatedAdminGuard)
-  @ApiOperation({ summary: "Blocks user" })
-  @ApiParam({
-    name: "userId",
-    description: "Pending user ID",
-    type: String,
-  })
-  @ApiBody({
-    description: "Block information",
-    type: DefaultAdminActionApiRequest,
-  })
-  @ApiOkResponse({
-    description: "Ok request",
-    type: DefaultApiResponse,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Blocks user", apiParam: "userId" })
   async blockUser(@Param("userId") userId: string, @Body() data: DefaultAdminActionApiRequest, @Request() req): Promise<DefaultApiResponse> {
     const adminId = req.user._doc._id;
 
@@ -207,19 +129,7 @@ export class UserControllerV1 {
 
   @Post("request-recovery")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Creates a recovery password token" })
-  @ApiBody({
-    description: "User email",
-    type: RequestRecoveryDTO,
-  })
-  @ApiOkResponse({
-    description: "Ok request",
-    type: DefaultApiResponse,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Creates a recovery password token", body: RequestRecoveryDTO })
   async requestRecovery(@Body() body: RequestRecoveryDTO): Promise<RequestRecoveryPresentation> {
     const { email } = body;
 
@@ -230,24 +140,7 @@ export class UserControllerV1 {
 
   @Put("change-password/:token")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Changes password by token" })
-  @ApiBody({
-    description: "User new password",
-    type: ChangePasswordDTO,
-  })
-  @ApiParam({
-    name: "token",
-    description: "Request token",
-    type: String,
-  })
-  @ApiOkResponse({
-    description: "Ok request",
-    type: DefaultApiResponse,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
+  @GenericSwagger({ summary: "Changes password by token", apiParam: "token", body: ChangePasswordDTO })
   async changePassword(@Body() body: ChangePasswordDTO, @Param("token") token: string): Promise<DefaultApiResponse> {
     const { password } = body;
 

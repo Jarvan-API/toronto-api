@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Post, Request, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { ThrottlerGuard } from "@nestjs/throttler";
 
 import { SignInDTO, SignUpDTO } from "src/application/dtos";
-import { DefaultApiResponse, ExceptionDTO } from "src/application/dtos/common.dtos";
+import { DefaultApiResponse } from "src/application/dtos/common.dtos";
 import { UserCreated, UserLoggedIn } from "src/application/presentations";
 import { UserSignIn, UserSignUp } from "src/application/use-cases";
 import { LocalAuthGuard, LowAuthenticatedGuard } from "src/infrastructure/config";
+import { GenericSwagger } from "src/infrastructure/decorators/swagger.decorator";
 
 @Controller({
   path: "auth",
@@ -24,17 +25,10 @@ export class AuthControllerV1 {
 
   @Post("sign-up")
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: "Register user" })
-  @ApiBody({
-    type: SignUpDTO,
-  })
+  @GenericSwagger({ summary: "Register user", body: SignUpDTO })
   @ApiOkResponse({
     description: "User created",
     type: UserCreated,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
   })
   async signUp(@Body() data: SignUpDTO): Promise<UserCreated> {
     const userId = await this.signupUseCase.exec(data);
@@ -45,21 +39,10 @@ export class AuthControllerV1 {
   @Post("sign-in")
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Login with email and password" })
-  @ApiBody({
-    type: SignInDTO,
-  })
+  @GenericSwagger({ summary: "Login with email and password", body: SignInDTO })
   @ApiOkResponse({
     description: "User logged",
     type: UserLoggedIn,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
-  @ApiUnauthorizedResponse({
-    description: "Unauthorized",
-    type: ExceptionDTO,
   })
   async signIn(@Request() req): Promise<UserLoggedIn> {
     await this.signInUseCase.exec(req.sessionID);
@@ -70,18 +53,10 @@ export class AuthControllerV1 {
   @Get("/")
   @UseGuards(ThrottlerGuard, LowAuthenticatedGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Check session status" })
+  @GenericSwagger({ summary: "Check session status" })
   @ApiOkResponse({
     description: "User is logged correctly",
     type: UserLoggedIn,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
-  })
-  @ApiUnauthorizedResponse({
-    description: "Unauthorized",
-    type: ExceptionDTO,
   })
   async check(): Promise<DefaultApiResponse> {
     return { message: "User is logged", status: HttpStatus.OK };
@@ -90,14 +65,10 @@ export class AuthControllerV1 {
   @Delete("sign-out")
   @HttpCode(HttpStatus.OK)
   @UseGuards(LowAuthenticatedGuard)
-  @ApiOperation({ summary: "Sign outs user" })
+  @GenericSwagger({ summary: "Sign outs user" })
   @ApiOkResponse({
     description: "Ok request",
     type: DefaultApiResponse,
-  })
-  @ApiBadRequestResponse({
-    description: "Bad request",
-    type: ExceptionDTO,
   })
   async signout(@Request() req): Promise<DefaultApiResponse> {
     req.session.destroy();
