@@ -1,21 +1,34 @@
-version: "3"
+version: "3.8"
 
 services:
   mongo:
-    image: mongo
+    image: mongo:latest # Consider pinning to a specific version for production
     restart: always
     container_name: mongo-toronto-dev
     ports:
       - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: yourUsername
+      MONGO_INITDB_ROOT_PASSWORD: yourPassword
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - my-network
 
   redis:
-    image: "redis:latest"
+    image: "redis:6.2" # Pinning to a specific version for consistency
+    restart: always
     container_name: redis-toronto-dev
     ports:
       - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - my-network
+
+volumes:
+  mongo-data:
+  redis-data:
 
 networks:
   my-network:
-
-volumes:
-  cassandra-data:
