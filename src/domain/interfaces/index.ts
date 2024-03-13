@@ -10,3 +10,4 @@ export * from "./redis-repository.interface";
 export * from "./character-repository.interface";
 export * from "./harem-repository.interface";
 export * from "./notification-repository.interface";
+export * from "./slack-repository.interface";

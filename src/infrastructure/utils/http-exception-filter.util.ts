@@ -1,11 +1,18 @@
-import { HttpAdapterHost } from "@nestjs/core";
-import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus, HttpException } from "@nestjs/common";
+import { HttpAdapterHost, ModuleRef } from "@nestjs/core";
+import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus, HttpException, Injectable } from "@nestjs/common";
 
 import { GenericHttpException } from "src/application/exceptions";
+import { FlagService } from "src/application/services/flag/flag.service";
 
 @Catch()
+@Injectable()
 export class AllExceptionsFilter implements ExceptionFilter {
-  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+  private flagService: FlagService;
+
+  constructor(
+    private readonly httpAdapterHost: HttpAdapterHost,
+    private moduleRef: ModuleRef,
+  ) {}
 
   catch(exception: HttpException, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
@@ -22,6 +29,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
     };
+
+    this.flagService = this.moduleRef.get(FlagService, { strict: false });
+    if (this.flagService) this.flagService.trigger(exception).catch(error => "Error sending message to Slack");
 
     httpAdapter.reply(ctx.getResponse(), { ...genericHttpException, ...httpExceptionBody }, statusCode);
   }

@@ -4,7 +4,7 @@ import MongoStore from "connect-mongo";
 import helmet from "helmet";
 import "reflect-metadata";
 import { ConfigService } from "@nestjs/config";
-import { HttpAdapterHost, NestFactory } from "@nestjs/core";
+import { HttpAdapterHost, ModuleRef, NestFactory } from "@nestjs/core";
 import { Logger, ValidationPipe, VersioningType } from "@nestjs/common";
 
 import { AppModule } from "./app.module";
@@ -55,7 +55,7 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost), app.get(ModuleRef)));
   app.setGlobalPrefix("api");
   app.enableVersioning({ type: VersioningType.URI });
 

@@ -11,4 +11,5 @@ export enum PORT {
   Character = "Character.Port",
   Harem = "Harem.Port",
   Notification = "Notification.Port",
+  Slack = "Slack.Port",
 }
